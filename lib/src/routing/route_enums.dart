@@ -1,8 +1,1 @@
-enum AppRoute {
-  splash,
-  home,
-  requestDetails,
-  bookingSuccess,
-  traceLogs,
-  bookingsHistory,
-}
+enum AppRoute { chat, admin }

@@ -20,10 +20,10 @@ class MyApp extends ConsumerWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp.router(
-          title: 'Hubnex AI',
+          title: 'AI Service Orchestrator',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
           themeMode: themeMode,
           routerConfig: route,
         );

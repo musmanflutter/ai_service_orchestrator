@@ -1,4 +1,3 @@
-import 'package:ai_service_orchestrator/src/consts/base_colors.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/controller/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,11 +22,13 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: const BoxDecoration(
-        color: BaseColors.surface,
-        border: Border(top: BorderSide(color: BaseColors.border)),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(top: BorderSide(color: theme.dividerColor)),
       ),
       child: SafeArea(
         child: Row(
@@ -55,8 +56,16 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: BaseColors.background,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      fillColor: theme.scaffoldBackgroundColor,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      hintStyle: TextStyle(
+                        color: theme.textTheme.bodyMedium?.color?.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -70,21 +79,27 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 final canSend = input.trim().isNotEmpty && !isThinking;
 
                 return InkWell(
-                  onTap: canSend ? () {
-                    widget.onSend();
-                    _controller.clear();
-                    ref.read(chatInputProvider.notifier).state = '';
-                  } : null,
+                  onTap: canSend
+                      ? () {
+                          widget.onSend();
+                          _controller.clear();
+                          ref.read(chatInputProvider.notifier).state = '';
+                        }
+                      : null,
                   borderRadius: BorderRadius.circular(24),
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: canSend ? BaseColors.primary : BaseColors.border,
+                      color: canSend
+                          ? theme.colorScheme.primary
+                          : theme.dividerColor,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.send,
-                      color: canSend ? Colors.white : BaseColors.textSecondary,
+                      color: canSend
+                          ? Colors.white
+                          : theme.textTheme.bodyMedium?.color,
                       size: 20,
                     ),
                   ),

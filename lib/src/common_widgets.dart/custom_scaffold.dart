@@ -1,6 +1,4 @@
-import 'package:ai_service_orchestrator/src/common_widgets.dart/dialogs/show_alert_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CustomScaffold extends StatefulWidget {
   const CustomScaffold({super.key, this.appBar, this.body, this.drawer});
@@ -34,16 +32,6 @@ class _CustomScaffoldState extends State<CustomScaffold> {
           navigator.pop();
           return;
         }
-
-        // 3: ROOT SCREEN → ASK EXIT
-        final shouldExit = await showAlertDialog(
-          context: context,
-          titleText: 'Exit?',
-          content: 'Are you sure you want to exit?',
-          cancelActionText: 'Cancel',
-          defaultActionText: 'Exit',
-        );
-        if (shouldExit == true) SystemNavigator.pop();
       },
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

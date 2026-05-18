@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ai_service_orchestrator/src/consts/base_colors.dart';
+
 
 void showReasoningBottomSheet(BuildContext context, String reasoningText) {
   showModalBottomSheet(
@@ -7,11 +7,13 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
+      final theme = Theme.of(context);
+      
       return Container(
         padding: const EdgeInsets.all(24),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
           ),
@@ -22,19 +24,19 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
           children: [
             Row(
               children: [
-                const Icon(Icons.psychology, color: BaseColors.primary),
+                Icon(Icons.psychology, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
-                const Text(
+                Text(
                   "Agentic Reasoning Trace",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: BaseColors.textPrimary,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close, color: BaseColors.textSecondary),
+                  icon: Icon(Icons.close, color: theme.textTheme.bodyMedium?.color),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -44,16 +46,16 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: BaseColors.background,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: BaseColors.border),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Text(
                 reasoningText.trim(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'monospace',
                   fontSize: 13,
-                  color: BaseColors.textPrimary,
+                  color: theme.textTheme.bodyLarge?.color,
                   height: 1.5,
                 ),
               ),

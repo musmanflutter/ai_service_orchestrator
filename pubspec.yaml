@@ -55,7 +55,10 @@ dependencies:
   cached_network_image: ^3.4.1
   dio: ^5.9.2
   
-  google_generative_ai: ^0.4.7
+  google_generative_ai: any
+  firebase_core: any
+  cloud_firestore: any
+  firebase_vertexai: any
 
 dev_dependencies:
   flutter_test:
