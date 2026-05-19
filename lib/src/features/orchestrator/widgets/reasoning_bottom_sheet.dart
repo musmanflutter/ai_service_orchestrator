@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 void showReasoningBottomSheet(BuildContext context, String reasoningText) {
@@ -10,12 +11,12 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
       final theme = Theme.of(context);
       
       return Container(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
           color: theme.scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(24.r),
+            topRight: Radius.circular(24.r),
           ),
         ),
         child: Column(
@@ -25,11 +26,11 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
             Row(
               children: [
                 Icon(Icons.psychology, color: theme.colorScheme.primary),
-                const SizedBox(width: 8),
+                SizedBox(width: 8.w),
                 Text(
                   "Agentic Reasoning Trace",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                     color: theme.textTheme.bodyLarge?.color,
                   ),
@@ -42,25 +43,25 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
               ],
             ),
             const Divider(),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: theme.dividerColor),
               ),
               child: Text(
                 reasoningText.trim(),
                 style: TextStyle(
                   fontFamily: 'monospace',
-                  fontSize: 13,
+                  fontSize: 13.sp,
                   color: theme.textTheme.bodyLarge?.color,
                   height: 1.5,
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.h),
           ],
         ),
       );

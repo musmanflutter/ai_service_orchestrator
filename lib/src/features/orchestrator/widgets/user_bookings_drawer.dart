@@ -4,6 +4,7 @@ import 'package:ai_service_orchestrator/src/common_widgets.dart/sharedpreference
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UserBookingsDrawer extends ConsumerWidget {
   const UserBookingsDrawer({super.key});
@@ -22,7 +23,7 @@ class UserBookingsDrawer extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -81,18 +82,21 @@ class UserBookingsDrawer extends ConsumerWidget {
                   }
 
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
                     ),
                     itemCount: bookings.length,
                     itemBuilder: (context, index) {
                       final doc =
                           bookings[index].data() as Map<String, dynamic>;
                       final status = doc['status'] as String;
-                      final providerName = doc['providerName'] as String;
-                      final bookingId = doc['id'] as String;
+                      final providerName = doc['providerName'] as String? ?? 'Unknown';
+                      final bookingId = doc['id'] as String? ?? 'Unknown';
                       final createdAt = doc['createdAt'] as Timestamp?;
+                      final service = doc['service'] as String? ?? 'Unknown Service';
+                      final location = doc['location'] as String? ?? 'Unknown Location';
+                      final time = doc['time'] as String? ?? 'Unknown Time';
 
                       Color statusColor;
                       IconData statusIcon;
@@ -108,13 +112,13 @@ class UserBookingsDrawer extends ConsumerWidget {
                       }
 
                       return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: EdgeInsets.only(bottom: 12.h),
                         color: theme.cardTheme.color,
                         shape: theme.cardTheme.shape,
                         child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 8.h,
                           ),
                           leading: CircleAvatar(
                             backgroundColor: statusColor.withValues(
@@ -131,37 +135,54 @@ class UserBookingsDrawer extends ConsumerWidget {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 4),
+                              SizedBox(height: 4.h),
                               Text(
-                                bookingId,
+                                '$service • $time',
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13.sp,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                location,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 12.sp,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                'ID: $bookingId',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 11.sp,
+                                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
                                 ),
                               ),
                               if (createdAt != null)
                                 Text(
                                   createdAt.toDate().toString().split('.')[0],
                                   style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 11,
+                                    fontSize: 11.sp,
+                                    color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
                                   ),
                                 ),
                             ],
                           ),
                           trailing: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
                             ),
                             decoration: BoxDecoration(
                               color: statusColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Text(
                               status.toUpperCase(),
                               style: TextStyle(
                                 color: statusColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 11,
+                                fontSize: 11.sp,
                               ),
                             ),
                           ),

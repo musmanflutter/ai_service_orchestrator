@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/repository/firestore_service.dart';
 
@@ -49,40 +50,90 @@ class AdminDashboardPage extends ConsumerWidget {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(24.w),
             itemCount: bookings.length,
             itemBuilder: (context, index) {
               final booking = bookings[index].data() as Map<String, dynamic>;
-              final bookingId = booking['id'];
-              final providerName = booking['providerName'];
+              final bookingId = booking['id'] as String? ?? 'Unknown';
+              final providerName = booking['providerName'] as String? ?? 'Unknown';
+              final service = booking['service'] as String? ?? 'Unknown Service';
+              final location = booking['location'] as String? ?? 'Unknown Location';
+              final time = booking['time'] as String? ?? 'Unknown Time';
 
               return Card(
-                margin: const EdgeInsets.only(bottom: 16),
+                margin: EdgeInsets.only(bottom: 16.h),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16.w),
                   child: Row(
                     children: [
                       Icon(
                         Icons.assignment,
-                        size: 40,
+                        size: 40.r,
                         color: theme.colorScheme.primary,
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16.w),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'Booking ID: $bookingId',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4.h),
                             Text(
                               'Assigned to: $providerName',
                               style: TextStyle(
                                 color: theme.textTheme.bodyMedium?.color,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                color: theme.scaffoldBackgroundColor,
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(Icons.build, size: 14.r, color: theme.colorScheme.primary),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        'Service: $service',
+                                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.access_time, size: 14.r, color: theme.colorScheme.primary),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        'Time: $time',
+                                        style: TextStyle(fontSize: 13.sp),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.location_on, size: 14.r, color: theme.colorScheme.primary),
+                                      SizedBox(width: 8.w),
+                                      Text(
+                                        'Location: $location',
+                                        style: TextStyle(fontSize: 13.sp),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -95,14 +146,14 @@ class AdminDashboardPage extends ConsumerWidget {
                             'completed',
                           );
                         },
-                        icon: const Icon(Icons.check, size: 16),
-                        label: const Text('Complete Job'),
+                        icon: Icon(Icons.check, size: 16.r),
+                        label: Text('Complete Job', style: TextStyle(fontSize: 14.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       ElevatedButton.icon(
                         onPressed: () {
                           firestoreService.updateBookingStatus(
@@ -110,8 +161,8 @@ class AdminDashboardPage extends ConsumerWidget {
                             'cancelled',
                           );
                         },
-                        icon: const Icon(Icons.close, size: 16),
-                        label: const Text('Cancel Job'),
+                        icon: Icon(Icons.close, size: 16.r),
+                        label: Text('Cancel Job', style: TextStyle(fontSize: 14.sp)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,

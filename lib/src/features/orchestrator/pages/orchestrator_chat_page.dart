@@ -4,6 +4,7 @@ import 'package:ai_service_orchestrator/src/features/orchestrator/utils/send_mes
 import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/chat_bubble.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/chat_input_field.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/user_bookings_drawer.dart';
+import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/booking_reminder_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,7 +40,8 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return CustomScaffold(
+    return BookingReminderListener(
+      child: CustomScaffold(
       drawer: const UserBookingsDrawer(),
       appBar: AppBar(
         title: Row(
@@ -55,8 +57,8 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
           ],
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: theme.dividerColor, height: 1),
+          preferredSize: Size.fromHeight(1.h),
+          child: Container(color: theme.dividerColor, height: 1.h),
         ),
       ),
       body: Column(
@@ -92,6 +94,6 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

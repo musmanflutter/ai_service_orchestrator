@@ -76,8 +76,10 @@ class AiController extends _$AiController {
     final providersJson = jsonEncode(providers.map((p) => p.toJson()).toList());
 
     // 2. Generate the Agentic System Prompt
+    final currentTime = DateTime.now().toUtc().toIso8601String(); // Always UTC so AI computes correct timestamps
     final systemPrompt = SystemPrompts.getAgenticOrchestratorPrompt(
       providersJson,
+      currentTime,
     );
 
     // 3. Build History (Inject System Prompt at the very beginning)

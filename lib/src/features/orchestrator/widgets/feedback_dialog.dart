@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 Future<void> showFeedbackDialog(
@@ -23,7 +24,7 @@ Future<void> showFeedbackDialog(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("How was the service?", style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) {
@@ -31,13 +32,13 @@ Future<void> showFeedbackDialog(
                       icon: Icon(
                         index < selectedRating ? Icons.star : Icons.star_border,
                         color: Colors.amber,
-                        size: 32,
+                        size: 32.r,
                       ),
                       onPressed: () => setState(() => selectedRating = index + 1.0),
                     );
                   }),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 TextField(
                   controller: commentController,
                   decoration: const InputDecoration(

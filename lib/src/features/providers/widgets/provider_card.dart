@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/controller/ai_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ai_service_orchestrator/src/features/providers/data/mock_providers.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/feedback_dialog.dart';
@@ -9,8 +10,13 @@ import 'package:ai_service_orchestrator/src/features/orchestrator/repository/fir
 
 class ProviderCard extends ConsumerStatefulWidget {
   final String providerId;
+  final Map<String, String>? bookingContext;
 
-  const ProviderCard({super.key, required this.providerId});
+  const ProviderCard({
+    super.key,
+    required this.providerId,
+    this.bookingContext,
+  });
 
   @override
   ConsumerState<ProviderCard> createState() => _ProviderCardState();
@@ -26,7 +32,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
     super.dispose();
   }
 
-  void _bookProvider(BuildContext context, String providerName, int basePrice) {
+  void _bookProvider(String providerName, int basePrice) {
     setState(() => bookingStatus = 'pending');
 
     // Generate random mock booking ID
@@ -34,9 +40,15 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
         'BKG-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
 
     // Write to Firestore
-    ref
-        .read(firestoreServiceProvider)
-        .createBooking(bookingId, widget.providerId, providerName);
+    ref.read(firestoreServiceProvider).createBooking(
+          bookingId,
+          widget.providerId,
+          providerName,
+          widget.bookingContext?['service'] ?? 'Unknown Service',
+          widget.bookingContext?['location'] ?? 'Unknown Location',
+          widget.bookingContext?['time'] ?? 'Unknown Time',
+          widget.bookingContext?['scheduledTimestamp'],
+        );
 
     // Listen to Firestore for Admin updates
     _bookingSub = ref
@@ -51,6 +63,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
             ref
                 .read(aiControllerProvider.notifier)
                 .triggerCancellation(widget.providerId);
+            if (!mounted) return;
             if (Navigator.canPop(context)) {
               Navigator.of(
                 context,
@@ -59,6 +72,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
             }
           } else if (status == 'completed' && bookingStatus != 'completed') {
             setState(() => bookingStatus = 'completed');
+            if (!mounted) return;
             if (Navigator.canPop(context)) {
               Navigator.of(
                 context,
@@ -81,14 +95,14 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: theme.scaffoldBackgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Row(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        title: Row(
           children: [
-            Icon(Icons.verified, color: Colors.green, size: 28),
-            SizedBox(width: 8),
+            Icon(Icons.verified, color: Colors.green, size: 28.r),
+            SizedBox(width: 8.w),
             Text(
               'Booking Confirmed',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
             ),
           ],
         ),
@@ -97,10 +111,10 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: theme.dividerColor),
               ),
               child: Column(
@@ -113,19 +127,19 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                         'Booking ID:',
                         style: TextStyle(
                           color: theme.textTheme.bodyMedium?.color,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                       Text(
                         bookingId,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -133,19 +147,81 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                         'Provider:',
                         style: TextStyle(
                           color: theme.textTheme.bodyMedium?.color,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                       Text(
                         providerName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
+                  if (widget.bookingContext != null) ...[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Service:',
+                          style: TextStyle(
+                            color: theme.textTheme.bodyMedium?.color,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        Text(
+                          widget.bookingContext!['service'] ?? '-',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Location:',
+                          style: TextStyle(
+                            color: theme.textTheme.bodyMedium?.color,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        Text(
+                          widget.bookingContext!['location'] ?? '-',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Time:',
+                          style: TextStyle(
+                            color: theme.textTheme.bodyMedium?.color,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        Text(
+                          widget.bookingContext!['time'] ?? '-',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -153,32 +229,32 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                         'Cost Estimate:',
                         style: TextStyle(
                           color: theme.textTheme.bodyMedium?.color,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                       Text(
                         'Rs. $basePrice',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  const Row(
+                  SizedBox(height: 8.h),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Status:',
-                        style: TextStyle(color: Colors.orange, fontSize: 13),
+                        style: TextStyle(color: Colors.orange, fontSize: 13.sp),
                       ),
                       Text(
                         'Waiting for Provider...',
                         style: TextStyle(
                           color: Colors.orange,
                           fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                     ],
@@ -186,12 +262,12 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Text(
               'An automated SMS has been sent to the provider. The AI is monitoring the status.',
               style: TextStyle(
                 color: theme.textTheme.bodyMedium?.color,
-                fontSize: 13,
+                fontSize: 13.sp,
               ),
             ),
           ],
@@ -204,7 +280,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.colorScheme.primary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
               ),
               child: const Text(
@@ -228,15 +304,15 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
     if (provider == null) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(top: 12.h),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: bookingStatus == 'completed'
             ? Colors.green.withValues(alpha: 0.1)
             : (bookingStatus == 'cancelled'
                   ? Colors.redAccent.withValues(alpha: 0.1)
                   : theme.cardTheme.color),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: bookingStatus == 'none'
               ? theme.dividerColor
@@ -250,8 +326,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
           if (theme.brightness == Brightness.light)
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 10.r,
+              offset: Offset(0, 4.h),
             ),
         ],
       ),
@@ -266,7 +342,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   provider.name,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: theme.textTheme.bodyLarge?.color,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -274,8 +350,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
               ),
               Row(
                 children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 18),
-                  const SizedBox(width: 4),
+                  Icon(Icons.star, color: Colors.amber, size: 18.r),
+                  SizedBox(width: 4.w),
                   Text(
                     provider.rating.toString(),
                     style: TextStyle(
@@ -287,27 +363,27 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                     ' (${provider.reviewCount})',
                     style: TextStyle(
                       color: theme.textTheme.bodyMedium?.color,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Row(
             children: [
               Icon(
                 Icons.location_on,
-                size: 14,
+                size: 14.r,
                 color: theme.textTheme.bodyMedium?.color,
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4.w),
               Text(
                 '${provider.distanceKm} km away',
                 style: TextStyle(
                   color: theme.textTheme.bodyMedium?.color,
-                  fontSize: 13,
+                  fontSize: 13.sp,
                 ),
               ),
               const Spacer(),
@@ -316,25 +392,57 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                 style: TextStyle(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          if (widget.bookingContext != null) ...[
+            SizedBox(height: 12.h),
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: theme.scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.task_alt,
+                    size: 14.r,
+                    color: theme.colorScheme.primary,
+                  ),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Text(
+                      '${widget.bookingContext!['service']} • ${widget.bookingContext!['time']} • ${widget.bookingContext!['location']}',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: theme.textTheme.bodyMedium?.color,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          SizedBox(height: 16.h),
           if (bookingStatus == 'none')
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () =>
-                    _bookProvider(context, provider.name, provider.basePrice),
+                    _bookProvider(provider.name, provider.basePrice),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.white,
                   elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),
                 child: const Text(
@@ -346,14 +454,14 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
           else ...[
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: 12.h),
               decoration: BoxDecoration(
                 color: bookingStatus == 'completed'
                     ? Colors.green
                     : (bookingStatus == 'cancelled'
                           ? Colors.red
                           : Colors.green),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               alignment: Alignment.center,
               child: Text(
@@ -369,13 +477,13 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
               ),
             ),
             if (bookingStatus == 'pending') ...[
-              const SizedBox(height: 16),
-              const Center(
+              SizedBox(height: 16.h),
+              Center(
                 child: Text(
                   "Waiting for provider updates in Admin panel...",
                   style: TextStyle(
                     color: Colors.orange,
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontStyle: FontStyle.italic,
                   ),
                 ),

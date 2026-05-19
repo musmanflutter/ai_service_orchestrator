@@ -9,11 +9,23 @@ class FirestoreService {
   final FirebaseFirestore _db;
   FirestoreService(this._db);
 
-  Future<void> createBooking(String bookingId, String providerId, String providerName) async {
+  Future<void> createBooking(
+    String bookingId,
+    String providerId,
+    String providerName,
+    String service,
+    String location,
+    String time,
+    String? scheduledTimestamp,
+  ) async {
     await _db.collection('bookings').doc(bookingId).set({
       'id': bookingId,
       'providerId': providerId,
       'providerName': providerName,
+      'service': service,
+      'location': location,
+      'time': time,
+      'scheduledTimestamp': scheduledTimestamp,
       'status': 'pending',
       'createdAt': FieldValue.serverTimestamp(),
     });
@@ -27,6 +39,12 @@ class FirestoreService {
     return _db.collection('bookings')
         .where('status', isEqualTo: 'pending')
         .snapshots();
+  }
+
+  Future<QuerySnapshot> getPendingBookingsFuture() {
+    return _db.collection('bookings')
+        .where('status', isEqualTo: 'pending')
+        .get();
   }
 
   Stream<QuerySnapshot> getAllBookings() {

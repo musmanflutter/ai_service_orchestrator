@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 enum MessageSender { user, ai, system }
 
 class ChatMessage {
@@ -53,5 +55,20 @@ class ChatMessage {
     if (sender != MessageSender.ai) return [];
     final matches = RegExp(r'<provider>(.*?)</provider>', dotAll: true).allMatches(rawText);
     return matches.map((m) => m.group(1)!.trim()).where((id) => id.isNotEmpty).toList();
+  }
+
+  Map<String, String>? get bookingContext {
+    if (sender != MessageSender.ai) return null;
+    final match = RegExp(r'<context>(.*?)</context>', dotAll: true).firstMatch(rawText);
+    if (match != null) {
+      try {
+        final jsonString = match.group(1)!.trim();
+        final map = jsonDecode(jsonString) as Map<String, dynamic>;
+        return map.map((key, value) => MapEntry(key, value.toString()));
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:ai_service_orchestrator/src/features/orchestrator/controller/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatInputField extends StatefulWidget {
   final VoidCallback onSend;
@@ -25,7 +26,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         border: Border(top: BorderSide(color: theme.dividerColor)),
@@ -44,22 +45,22 @@ class _ChatInputFieldState extends State<ChatInputField> {
                     decoration: InputDecoration(
                       hintText: "Need an AC technician?",
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(24.r),
                         borderSide: BorderSide.none,
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(24.r),
                         borderSide: BorderSide.none,
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(24.r),
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
                       fillColor: theme.scaffoldBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 12.h,
                       ),
                       hintStyle: TextStyle(
                         color: theme.textTheme.bodyMedium?.color?.withValues(
@@ -71,7 +72,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 },
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8.w),
             Consumer(
               builder: (context, ref, child) {
                 final input = ref.watch(chatInputProvider);
@@ -86,9 +87,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           ref.read(chatInputProvider.notifier).state = '';
                         }
                       : null,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(24.r),
                   child: Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
                       color: canSend
                           ? theme.colorScheme.primary
@@ -100,7 +101,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                       color: canSend
                           ? Colors.white
                           : theme.textTheme.bodyMedium?.color,
-                      size: 20,
+                      size: 20.r,
                     ),
                   ),
                 );
