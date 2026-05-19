@@ -22,7 +22,9 @@ class _BookingReminderListenerState
   @override
   void initState() {
     super.initState();
-    debugPrint('[Reminder] BookingReminderListener initialized. Starting poll every 10s...');
+    debugPrint(
+      '[Reminder] BookingReminderListener initialized. Starting poll every 10s...',
+    );
     _startPolling();
   }
 
@@ -38,7 +40,8 @@ class _BookingReminderListenerState
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
         final snapshot = await firestoreService.getPendingBookingsFuture();
-        final now = DateTime.now().toUtc(); // Use UTC to match AI-generated timestamps
+        final now = DateTime.now()
+            .toUtc(); // Use UTC to match AI-generated timestamps
 
         debugPrint(
           '[Reminder] ${snapshot.docs.length} pending booking(s) found. Now: $now',
@@ -55,7 +58,9 @@ class _BookingReminderListenerState
           );
 
           if (scheduledTimestamp == null) {
-            debugPrint('[Reminder] ⚠️  No scheduledTimestamp on $bookingId — skipping.');
+            debugPrint(
+              '[Reminder] ⚠️  No scheduledTimestamp on $bookingId — skipping.',
+            );
             continue;
           }
 

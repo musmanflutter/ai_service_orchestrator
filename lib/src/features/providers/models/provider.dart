@@ -1,12 +1,15 @@
 class ServiceProvider {
   final String id;
   final String name;
-  final String category; // e.g. "AC Technician", "Plumber", "Electrician"
+  final String category;
   final double rating;
   final int reviewCount;
   final double distanceKm;
   final int basePrice;
-  final double cancellationRate; // 0.0 to 1.0 (lower is better)
+  final int maxPrice;
+  final double cancellationRate;
+  final List<String> tags; // e.g. ["Top Rated", "Fast Response"]
+  final String avatarEmoji; // e.g. "👨‍🔧"
 
   ServiceProvider({
     required this.id,
@@ -16,7 +19,10 @@ class ServiceProvider {
     required this.reviewCount,
     required this.distanceKm,
     required this.basePrice,
-    required this.cancellationRate,
+    this.maxPrice = 0,
+    this.cancellationRate = 0.0,
+    this.tags = const [],
+    this.avatarEmoji = '👨‍🔧',
   });
 
   // Helpful for when we feed this data into the Gemini Prompt
@@ -29,7 +35,13 @@ class ServiceProvider {
       'reviewCount': reviewCount,
       'distanceKm': distanceKm,
       'basePrice': basePrice,
+      'maxPrice': maxPrice > 0 ? maxPrice : basePrice + 500,
       'cancellationRate': cancellationRate,
+      'tags': tags,
     };
   }
+
+  // Reliability as a percentage string
+  String get reliabilityPercent =>
+      '${((1 - cancellationRate) * 100).toStringAsFixed(0)}%';
 }

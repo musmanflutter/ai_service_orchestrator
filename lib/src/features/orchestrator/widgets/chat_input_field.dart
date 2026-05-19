@@ -26,88 +26,113 @@ class _ChatInputFieldState extends State<ChatInputField> {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(top: BorderSide(color: theme.dividerColor)),
-      ),
+      color: Colors.transparent,
+      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
       child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: Consumer(
+        top: false,
+        bottom: true,
+        child: Container(
+          decoration: BoxDecoration(
+            color: theme.cardTheme.color,
+            borderRadius: BorderRadius.circular(32.r),
+            border: Border.all(color: theme.dividerColor.withOpacity(0.6)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 12.r,
+                offset: Offset(0, 4.h),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+          child: Row(
+            children: [
+              // ── Text input field ────────────────────────────────
+              Expanded(
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    return TextFormField(
+                      controller: _controller,
+                      onChanged: (val) {
+                        ref.read(chatInputProvider.notifier).state = val;
+                      },
+                      style: TextStyle(fontSize: 14.sp),
+                      decoration: InputDecoration(
+                        hintText: "Type your message...",
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 4.w,
+                          vertical: 10.h,
+                        ),
+                        hintStyle: TextStyle(
+                          color: theme.textTheme.bodyMedium?.color?.withOpacity(
+                            0.45,
+                          ),
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              SizedBox(width: 8.w),
+
+              // ── Send Button ────────────────────────────────────
+              Consumer(
                 builder: (context, ref, child) {
-                  return TextFormField(
-                    controller: _controller,
-                    onChanged: (val) {
-                      ref.read(chatInputProvider.notifier).state = val;
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Need an AC technician?",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24.r),
-                        borderSide: BorderSide.none,
+                  final input = ref.watch(chatInputProvider);
+                  final isThinking = ref.watch(isAgentThinkingProvider);
+                  final canSend = input.trim().isNotEmpty && !isThinking;
+
+                  return GestureDetector(
+                    onTap: canSend
+                        ? () {
+                            widget.onSend();
+                            _controller.clear();
+                            ref.read(chatInputProvider.notifier).state = '';
+                          }
+                        : null,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 40.r,
+                      height: 40.r,
+                      decoration: BoxDecoration(
+                        color: canSend
+                            ? theme.colorScheme.primary
+                            : theme.dividerColor.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                        boxShadow: canSend
+                            ? [
+                                BoxShadow(
+                                  color: theme.colorScheme.primary.withOpacity(
+                                    0.25,
+                                  ),
+                                  blurRadius: 8.r,
+                                  offset: Offset(0, 3.h),
+                                ),
+                              ]
+                            : null,
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: theme.scaffoldBackgroundColor,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 12.h,
-                      ),
-                      hintStyle: TextStyle(
-                        color: theme.textTheme.bodyMedium?.color?.withValues(
-                          alpha: 0.5,
+                      child: Center(
+                        child: Icon(
+                          Icons.arrow_upward_rounded,
+                          color: canSend
+                              ? Colors.white
+                              : theme.textTheme.bodyMedium?.color?.withOpacity(
+                                  0.4,
+                                ),
+                          size: 20.r,
                         ),
                       ),
                     ),
                   );
                 },
               ),
-            ),
-            SizedBox(width: 8.w),
-            Consumer(
-              builder: (context, ref, child) {
-                final input = ref.watch(chatInputProvider);
-                final isThinking = ref.watch(isAgentThinkingProvider);
-                final canSend = input.trim().isNotEmpty && !isThinking;
-
-                return InkWell(
-                  onTap: canSend
-                      ? () {
-                          widget.onSend();
-                          _controller.clear();
-                          ref.read(chatInputProvider.notifier).state = '';
-                        }
-                      : null,
-                  borderRadius: BorderRadius.circular(24.r),
-                  child: Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: canSend
-                          ? theme.colorScheme.primary
-                          : theme.dividerColor,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.send,
-                      color: canSend
-                          ? Colors.white
-                          : theme.textTheme.bodyMedium?.color,
-                      size: 20.r,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

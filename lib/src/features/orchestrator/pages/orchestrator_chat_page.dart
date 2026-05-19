@@ -8,6 +8,7 @@ import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/bookin
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class OrchestratorChatPage extends ConsumerStatefulWidget {
   const OrchestratorChatPage({super.key});
@@ -42,58 +43,95 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
 
     return BookingReminderListener(
       child: CustomScaffold(
-      drawer: const UserBookingsDrawer(),
-      appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 8.w,
-          children: [
-            Icon(
-              Icons.auto_awesome,
-              color: theme.colorScheme.primary,
-              size: 20.r,
+        drawer: const UserBookingsDrawer(),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          centerTitle: true,
+          toolbarHeight: 68.h,
+          titleSpacing: 16.w,
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(
+                Icons.menu_rounded,
+                size: 24.r,
+                color: theme.textTheme.bodyLarge?.color,
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-            const Text("AI Service Orchestrator"),
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'AI Service Orchestrator',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                  color: theme.textTheme.bodyLarge?.color,
+                ),
+              ),
+              Text(
+                'Powered by Agentic AI',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.65),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.admin_panel_settings_rounded,
+                size: 24.r,
+                color: theme.colorScheme.primary,
+              ),
+              onPressed: () => context.go('/admin'),
+              tooltip: 'Admin Dashboard',
+            ),
+            SizedBox(width: 8.w),
           ],
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.h),
-          child: Container(color: theme.dividerColor, height: 1.h),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Consumer(
+
+        body: Column(
+          children: [
+            Expanded(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final messages = ref.watch(aiControllerProvider);
+
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _scrollToBottom();
+                  });
+
+                  return ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.all(16.r),
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return ChatBubble(message: messages[index]);
+                    },
+                  );
+                },
+              ),
+            ),
+            Consumer(
               builder: (context, ref, child) {
-                final messages = ref.watch(aiControllerProvider);
-
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _scrollToBottom();
-                });
-
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: EdgeInsets.all(16.r),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    return ChatBubble(message: messages[index]);
+                return ChatInputField(
+                  onSend: () {
+                    handleSendMessage(ref);
                   },
                 );
               },
             ),
-          ),
-          Consumer(
-            builder: (context, ref, child) {
-              return ChatInputField(
-                onSend: () {
-                  handleSendMessage(ref);
-                },
-              );
-            },
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

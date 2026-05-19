@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ai_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AiController extends _$AiController {
   @override
   List<ChatMessage> build() {
@@ -18,7 +18,7 @@ class AiController extends _$AiController {
       ChatMessage(
         id: 'welcome',
         rawText:
-            '<chat>Hi! I am your AI Service Orchestrator. What service do you need in Pakistan today?</chat>',
+            '<chat>**Hi! I\'m AI Service Orchestrator** 👋\nHow can I help you today?</chat>',
         sender: MessageSender.ai,
         timestamp: DateTime.now(),
       ),
@@ -76,7 +76,9 @@ class AiController extends _$AiController {
     final providersJson = jsonEncode(providers.map((p) => p.toJson()).toList());
 
     // 2. Generate the Agentic System Prompt
-    final currentTime = DateTime.now().toUtc().toIso8601String(); // Always UTC so AI computes correct timestamps
+    final currentTime = DateTime.now()
+        .toUtc()
+        .toIso8601String(); // Always UTC so AI computes correct timestamps
     final systemPrompt = SystemPrompts.getAgenticOrchestratorPrompt(
       providersJson,
       currentTime,

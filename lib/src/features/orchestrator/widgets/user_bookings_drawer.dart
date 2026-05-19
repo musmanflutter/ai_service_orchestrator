@@ -1,4 +1,5 @@
 import 'package:ai_service_orchestrator/src/features/orchestrator/repository/firestore_service.dart';
+import 'package:ai_service_orchestrator/src/features/providers/data/mock_providers.dart';
 import 'package:ai_service_orchestrator/src/themes/theme_mode.dart';
 import 'package:ai_service_orchestrator/src/common_widgets.dart/sharedpreference.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,8 +23,9 @@ class UserBookingsDrawer extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Header ──────────────────────────────────────────────
             Padding(
-              padding: EdgeInsets.all(20.w),
+              padding: EdgeInsets.fromLTRB(20.w, 20.h, 8.w, 12.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -34,16 +36,20 @@ class UserBookingsDrawer extends ConsumerWidget {
                       color: isDark ? Colors.amber : Colors.blueGrey,
                     ),
                     onPressed: () {
-                      final newMode = isDark ? ThemeMode.light : ThemeMode.dark;
+                      final newMode =
+                          isDark ? ThemeMode.light : ThemeMode.dark;
                       ref.read(themeModeProvider.notifier).state = newMode;
-                      Preference.setString('theme', isDark ? 'light' : 'dark');
+                      Preference.setString(
+                          'theme', isDark ? 'light' : 'dark');
                     },
                     tooltip: 'Toggle Theme',
                   ),
                 ],
               ),
             ),
-            Divider(color: theme.dividerColor),
+            Divider(color: theme.dividerColor, height: 1),
+
+            // ── Bookings list ────────────────────────────────────────
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestoreService.getAllBookings(),
@@ -51,143 +57,52 @@ class UserBookingsDrawer extends ConsumerWidget {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
-
                   if (snapshot.hasError) {
                     return Center(
-                      child: Text(
-                        'Error: ${snapshot.error}',
-                        style: theme.textTheme.bodyMedium,
-                      ),
+                      child: Text('Error: ${snapshot.error}',
+                          style: theme.textTheme.bodyMedium),
                     );
                   }
 
                   var bookings = snapshot.data?.docs.toList() ?? [];
-
                   bookings.sort((a, b) {
-                    final aData = a.data() as Map<String, dynamic>;
-                    final bData = b.data() as Map<String, dynamic>;
-                    final aTime = aData['createdAt'] as Timestamp?;
-                    final bTime = bData['createdAt'] as Timestamp?;
-                    if (aTime == null || bTime == null) return 0;
-                    return bTime.compareTo(aTime); // descending
+                    final aT =
+                        (a.data() as Map)['createdAt'] as Timestamp?;
+                    final bT =
+                        (b.data() as Map)['createdAt'] as Timestamp?;
+                    if (aT == null || bT == null) return 0;
+                    return bT.compareTo(aT);
                   });
 
                   if (bookings.isEmpty) {
                     return Center(
-                      child: Text(
-                        'You have no bookings yet.',
-                        style: theme.textTheme.bodyMedium,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.receipt_long_outlined,
+                              size: 48.r,
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withOpacity(0.3)),
+                          SizedBox(height: 12.h),
+                          Text('No bookings yet',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: theme.textTheme.bodyMedium?.color
+                                    ?.withOpacity(0.5),
+                              )),
+                        ],
                       ),
                     );
                   }
 
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 8.h,
-                    ),
+                        horizontal: 14.w, vertical: 12.h),
                     itemCount: bookings.length,
                     itemBuilder: (context, index) {
-                      final doc =
-                          bookings[index].data() as Map<String, dynamic>;
-                      final status = doc['status'] as String;
-                      final providerName = doc['providerName'] as String? ?? 'Unknown';
-                      final bookingId = doc['id'] as String? ?? 'Unknown';
-                      final createdAt = doc['createdAt'] as Timestamp?;
-                      final service = doc['service'] as String? ?? 'Unknown Service';
-                      final location = doc['location'] as String? ?? 'Unknown Location';
-                      final time = doc['time'] as String? ?? 'Unknown Time';
-
-                      Color statusColor;
-                      IconData statusIcon;
-                      if (status == 'completed') {
-                        statusColor = Colors.green;
-                        statusIcon = Icons.check_circle;
-                      } else if (status == 'cancelled') {
-                        statusColor = Colors.redAccent;
-                        statusIcon = Icons.cancel;
-                      } else {
-                        statusColor = Colors.orange;
-                        statusIcon = Icons.pending_actions;
-                      }
-
-                      return Card(
-                        margin: EdgeInsets.only(bottom: 12.h),
-                        color: theme.cardTheme.color,
-                        shape: theme.cardTheme.shape,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 8.h,
-                          ),
-                          leading: CircleAvatar(
-                            backgroundColor: statusColor.withValues(
-                              alpha: 0.15,
-                            ),
-                            child: Icon(statusIcon, color: statusColor),
-                          ),
-                          title: Text(
-                            providerName,
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 4.h),
-                              Text(
-                                '$service • $time',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.sp,
-                                ),
-                              ),
-                              SizedBox(height: 2.h),
-                              Text(
-                                location,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontSize: 12.sp,
-                                ),
-                              ),
-                              SizedBox(height: 2.h),
-                              Text(
-                                'ID: $bookingId',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontSize: 11.sp,
-                                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
-                                ),
-                              ),
-                              if (createdAt != null)
-                                Text(
-                                  createdAt.toDate().toString().split('.')[0],
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 11.sp,
-                                    color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          trailing: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: statusColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Text(
-                              status.toUpperCase(),
-                              style: TextStyle(
-                                color: statusColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11.sp,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
+                      final doc = bookings[index].data()
+                          as Map<String, dynamic>;
+                      return _BookingCard(doc: doc, theme: theme);
                     },
                   );
                 },
@@ -197,5 +112,234 @@ class UserBookingsDrawer extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+// ── Booking card ──────────────────────────────────────────────────────────────
+class _BookingCard extends StatelessWidget {
+  final Map<String, dynamic> doc;
+  final ThemeData theme;
+
+  const _BookingCard({required this.doc, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    final status = doc['status'] as String? ?? 'pending';
+    final providerName = doc['providerName'] as String? ?? 'Unknown';
+    final bookingId = doc['id'] as String? ?? '';
+    final time = doc['time'] as String? ?? 'Unknown Time';
+    final providerId = doc['providerId'] as String? ?? '';
+    final scheduledTimestamp = doc['scheduledTimestamp'] as String?;
+    final timeDisplay = _formatBookingTime(scheduledTimestamp, time);
+
+    // Look up provider data from mock
+    final provider =
+        mockProviders.where((p) => p.id == providerId).firstOrNull;
+    final rating = provider?.rating ?? 0.0;
+    final price = provider != null
+        ? 'PKR ${provider.basePrice} - ${provider.maxPrice}'
+        : '';
+    final emoji = provider?.avatarEmoji ?? '👨‍🔧';
+
+    // Status config
+    final _StatusConfig cfg = _statusConfig(status);
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      decoration: BoxDecoration(
+        color: theme.cardTheme.color,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border(
+          left: BorderSide(color: cfg.color, width: 4),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(12.w, 14.h, 14.w, 12.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Top row: avatar + name + rating + time ─────────────
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Avatar
+                Container(
+                  width: 52.r,
+                  height: 52.r,
+                  decoration: BoxDecoration(
+                    color: theme.scaffoldBackgroundColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: theme.dividerColor, width: 1.5),
+                  ),
+                  child: Center(
+                    child: Text(emoji, style: TextStyle(fontSize: 24.sp)),
+                  ),
+                ),
+                SizedBox(width: 12.w),
+
+                // Name + time
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Name + rating (full width now)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              providerName,
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.textTheme.bodyLarge?.color,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (rating > 0) ...[
+                            SizedBox(width: 6.w),
+                            Icon(Icons.star_rounded,
+                                color: Colors.amber, size: 14.r),
+                            SizedBox(width: 2.w),
+                            Text(
+                              rating.toString(),
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w600,
+                                color: theme.textTheme.bodyLarge?.color,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      SizedBox(height: 5.h),
+                      // Time
+                      Row(
+                        children: [
+                          Icon(Icons.access_time_rounded,
+                              size: 13.r,
+                              color: theme.colorScheme.primary),
+                          SizedBox(width: 4.w),
+                          Flexible(
+                            child: Text(
+                              timeDisplay,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: theme.textTheme.bodyMedium?.color,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 12.h),
+            Divider(height: 1, color: theme.dividerColor),
+            SizedBox(height: 10.h),
+
+            // ── Bottom row: status badge + price ───────────────────
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Status pill (bottom-left)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 7.r,
+                      height: 7.r,
+                      decoration: BoxDecoration(
+                        color: cfg.color,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      cfg.label,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: cfg.color,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Price (bottom-right)
+                if (price.isNotEmpty)
+                  Text(
+                    price,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
+                  ),
+              ],
+            ),
+
+            SizedBox(height: 4.h),
+
+            // Booking ID (small, below the status row)
+            Text(
+              '#${bookingId.toLowerCase()}',
+              style: TextStyle(
+                fontSize: 10.sp,
+                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.45),
+                fontFamily: 'monospace',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Status config ─────────────────────────────────────────────────────────────
+class _StatusConfig {
+  final String label;
+  final Color color;
+  const _StatusConfig(this.label, this.color);
+}
+
+_StatusConfig _statusConfig(String status) {
+  switch (status) {
+    case 'completed':
+      return const _StatusConfig('Completed', Colors.green);
+    case 'cancelled':
+      return _StatusConfig('Cancelled', Colors.red.shade500);
+    case 'confirmed':
+      return _StatusConfig('Confirmed', Colors.orange.shade600);
+    default:
+      return _StatusConfig('In Progress', Colors.blue.shade500);
+  }
+}
+
+String _formatBookingTime(String? scheduledTimestamp, String timeFallback) {
+  if (scheduledTimestamp == null || scheduledTimestamp.isEmpty) return timeFallback;
+  try {
+    final parsed = DateTime.parse(scheduledTimestamp).toLocal();
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final month = months[parsed.month - 1];
+    final day = parsed.day;
+    final hour = parsed.hour > 12 ? parsed.hour - 12 : (parsed.hour == 0 ? 12 : parsed.hour);
+    final period = parsed.hour >= 12 ? 'PM' : 'AM';
+    final minute = parsed.minute.toString().padLeft(2, '0');
+    return '$day $month, $hour:$minute $period';
+  } catch (_) {
+    return timeFallback;
   }
 }

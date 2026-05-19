@@ -20,7 +20,7 @@ final class AiControllerProvider
         argument: null,
         retry: null,
         name: r'aiControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -41,7 +41,7 @@ final class AiControllerProvider
   }
 }
 
-String _$aiControllerHash() => r'bf99faf222bf94c4806b46533c0561be330559bb';
+String _$aiControllerHash() => r'4f2ae98f620e60421bbcd407db6a4765c87f8b5f';
 
 abstract class _$AiController extends $Notifier<List<ChatMessage>> {
   List<ChatMessage> build();

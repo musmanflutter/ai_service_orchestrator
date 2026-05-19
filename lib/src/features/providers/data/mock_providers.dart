@@ -10,7 +10,10 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 120,
     distanceKm: 2.1,
     basePrice: 1500,
-    cancellationRate: 0.0, // Highly reliable
+    maxPrice: 2000,
+    cancellationRate: 0.0,
+    tags: ['Top Rated', 'Fast Response'],
+    avatarEmoji: '👨‍🔧',
   ),
   ServiceProvider(
     id: 'p2',
@@ -20,7 +23,10 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 85,
     distanceKm: 1.2,
     basePrice: 1200,
+    maxPrice: 1700,
     cancellationRate: 0.05,
+    tags: ['Fast Response'],
+    avatarEmoji: '🧑‍🔧',
   ),
   ServiceProvider(
     id: 'p3',
@@ -30,7 +36,10 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 30,
     distanceKm: 5.5,
     basePrice: 1000,
-    cancellationRate: 0.25, // High cancellation risk
+    maxPrice: 1400,
+    cancellationRate: 0.25,
+    tags: ['Budget Friendly'],
+    avatarEmoji: '👷',
   ),
 
   // PLUMBERS
@@ -42,7 +51,10 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 200,
     distanceKm: 3.0,
     basePrice: 800,
+    maxPrice: 1200,
     cancellationRate: 0.02,
+    tags: ['Top Rated', 'Verified'],
+    avatarEmoji: '👨‍🔧',
   ),
   ServiceProvider(
     id: 'p5',
@@ -52,7 +64,10 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 45,
     distanceKm: 0.8,
     basePrice: 1000,
+    maxPrice: 1500,
     cancellationRate: 0.10,
+    tags: ['Nearest'],
+    avatarEmoji: '🧑‍🔧',
   ),
 
   // ELECTRICIANS
@@ -64,7 +79,10 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 150,
     distanceKm: 4.2,
     basePrice: 1200,
+    maxPrice: 1800,
     cancellationRate: 0.01,
+    tags: ['Top Rated', 'Fast Response'],
+    avatarEmoji: '👨‍🔧',
   ),
   ServiceProvider(
     id: 'p7',
@@ -74,6 +92,9 @@ final List<ServiceProvider> mockProviders = [
     reviewCount: 22,
     distanceKm: 1.5,
     basePrice: 900,
-    cancellationRate: 0.15, // Unreliable
+    maxPrice: 1300,
+    cancellationRate: 0.15,
+    tags: ['Budget Friendly'],
+    avatarEmoji: '👷',
   ),
 ];
