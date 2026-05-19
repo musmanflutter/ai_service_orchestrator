@@ -68,7 +68,7 @@ ONLY IF you are actively recommending a provider. Output a strict JSON map conta
   "service": "Category name matching the provider exactly (e.g., AC Technician, Plumber)",
   "location": "Extracted localized area (e.g., G-13, DHA)",
   "time": "Human-friendly time requested",
-  "scheduledTimestamp": "ISO-8601 timestamp mathematically accurately calculated from \$currentTime (e.g., if user says 'Tomorrow 5 PM' and today is 2026-05-18, value must be '2026-05-19T17:00:00Z')"
+  "scheduledTimestamp": "ISO-8601 timestamp accurately calculated from \$currentTime using Pakistan Standard Time offset (+05:00). Example: if the user says 'Tomorrow 5 PM' and today is 2026-05-18, the value must be '2026-05-19T17:00:00+05:00'"
 }
 If slots are missing, OMIT this tag entirely.
 

@@ -215,7 +215,10 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                     _infoRow(
                       theme,
                       'Date & Time',
-                      widget.bookingContext?['time'] ?? 'On Request',
+                      _formatBookingTime(
+                        widget.bookingContext?['scheduledTimestamp'],
+                        widget.bookingContext?['time'] ?? 'On Request',
+                      ),
                     ),
                     Divider(height: 1, color: theme.dividerColor),
                     _infoRow(theme, 'Booking ID', '#$bookingId'),
