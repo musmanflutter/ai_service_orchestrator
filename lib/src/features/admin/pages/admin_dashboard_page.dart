@@ -81,15 +81,17 @@ class AdminDashboardPage extends ConsumerWidget {
                   Icon(
                     Icons.assignment_turned_in_outlined,
                     size: 64.r,
-                    color: theme.textTheme.bodyMedium?.color?.withOpacity(0.3),
+                    color: theme.textTheme.bodyMedium?.color?.withValues(
+                      alpha: 0.3,
+                    ),
                   ),
                   SizedBox(height: 16.h),
                   Text(
                     'No active pending bookings.',
                     style: TextStyle(
                       fontSize: 16.sp,
-                      color: theme.textTheme.bodyMedium?.color?.withOpacity(
-                        0.5,
+                      color: theme.textTheme.bodyMedium?.color?.withValues(
+                        alpha: 0.5,
                       ),
                     ),
                   ),
@@ -131,7 +133,7 @@ class AdminDashboardPage extends ConsumerWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 10.r,
                       offset: Offset(0, 3.h),
                     ),
@@ -201,7 +203,7 @@ class AdminDashboardPage extends ConsumerWidget {
             Container(
               padding: EdgeInsets.all(8.r),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -228,8 +230,8 @@ class AdminDashboardPage extends ConsumerWidget {
                   Text(
                     'Assigned to: $providerName',
                     style: TextStyle(
-                      color: theme.textTheme.bodyMedium?.color?.withOpacity(
-                        0.8,
+                      color: theme.textTheme.bodyMedium?.color?.withValues(
+                        alpha: 0.8,
                       ),
                       fontSize: 13.sp,
                     ),
@@ -536,7 +538,9 @@ class AdminDashboardPage extends ConsumerWidget {
               '$label: ',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                color: theme.textTheme.bodyMedium?.color?.withValues(
+                  alpha: 0.7,
+                ),
               ),
             ),
             Text(
@@ -556,7 +560,9 @@ class AdminDashboardPage extends ConsumerWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 10.sp,
-                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.55),
+                color: theme.textTheme.bodyMedium?.color?.withValues(
+                  alpha: 0.55,
+                ),
               ),
             ),
           ),

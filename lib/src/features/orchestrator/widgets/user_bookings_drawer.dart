@@ -36,11 +36,9 @@ class UserBookingsDrawer extends ConsumerWidget {
                       color: isDark ? Colors.amber : Colors.blueGrey,
                     ),
                     onPressed: () {
-                      final newMode =
-                          isDark ? ThemeMode.light : ThemeMode.dark;
+                      final newMode = isDark ? ThemeMode.light : ThemeMode.dark;
                       ref.read(themeModeProvider.notifier).state = newMode;
-                      Preference.setString(
-                          'theme', isDark ? 'light' : 'dark');
+                      Preference.setString('theme', isDark ? 'light' : 'dark');
                     },
                     tooltip: 'Toggle Theme',
                   ),
@@ -59,17 +57,17 @@ class UserBookingsDrawer extends ConsumerWidget {
                   }
                   if (snapshot.hasError) {
                     return Center(
-                      child: Text('Error: ${snapshot.error}',
-                          style: theme.textTheme.bodyMedium),
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     );
                   }
 
                   var bookings = snapshot.data?.docs.toList() ?? [];
                   bookings.sort((a, b) {
-                    final aT =
-                        (a.data() as Map)['createdAt'] as Timestamp?;
-                    final bT =
-                        (b.data() as Map)['createdAt'] as Timestamp?;
+                    final aT = (a.data() as Map)['createdAt'] as Timestamp?;
+                    final bT = (b.data() as Map)['createdAt'] as Timestamp?;
                     if (aT == null || bT == null) return 0;
                     return bT.compareTo(aT);
                   });
@@ -79,17 +77,21 @@ class UserBookingsDrawer extends ConsumerWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.receipt_long_outlined,
-                              size: 48.r,
-                              color: theme.textTheme.bodyMedium?.color
-                                  ?.withOpacity(0.3)),
+                          Icon(
+                            Icons.receipt_long_outlined,
+                            size: 48.r,
+                            color: theme.textTheme.bodyMedium?.color
+                                ?.withValues(alpha: 0.3),
+                          ),
                           SizedBox(height: 12.h),
-                          Text('No bookings yet',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: theme.textTheme.bodyMedium?.color
-                                    ?.withOpacity(0.5),
-                              )),
+                          Text(
+                            'No bookings yet',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withValues(alpha: 0.5),
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -97,11 +99,13 @@ class UserBookingsDrawer extends ConsumerWidget {
 
                   return ListView.builder(
                     padding: EdgeInsets.symmetric(
-                        horizontal: 14.w, vertical: 12.h),
+                      horizontal: 14.w,
+                      vertical: 12.h,
+                    ),
                     itemCount: bookings.length,
                     itemBuilder: (context, index) {
-                      final doc = bookings[index].data()
-                          as Map<String, dynamic>;
+                      final doc =
+                          bookings[index].data() as Map<String, dynamic>;
                       return _BookingCard(doc: doc, theme: theme);
                     },
                   );
@@ -133,8 +137,7 @@ class _BookingCard extends StatelessWidget {
     final timeDisplay = _formatBookingTime(scheduledTimestamp, time);
 
     // Look up provider data from mock
-    final provider =
-        mockProviders.where((p) => p.id == providerId).firstOrNull;
+    final provider = mockProviders.where((p) => p.id == providerId).firstOrNull;
     final rating = provider?.rating ?? 0.0;
     final price = provider != null
         ? 'PKR ${provider.basePrice} - ${provider.maxPrice}'
@@ -149,12 +152,10 @@ class _BookingCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardTheme.color,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border(
-          left: BorderSide(color: cfg.color, width: 4),
-        ),
+        border: Border(left: BorderSide(color: cfg.color, width: 4)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -196,17 +197,20 @@ class _BookingCard extends StatelessWidget {
                             child: Text(
                               providerName,
                               style: TextStyle(
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.textTheme.bodyLarge?.color,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.bold,
+                                color: theme.textTheme.bodyLarge?.color,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           if (rating > 0) ...[
                             SizedBox(width: 6.w),
-                            Icon(Icons.star_rounded,
-                                color: Colors.amber, size: 14.r),
+                            Icon(
+                              Icons.star_rounded,
+                              color: Colors.amber,
+                              size: 14.r,
+                            ),
                             SizedBox(width: 2.w),
                             Text(
                               rating.toString(),
@@ -223,9 +227,11 @@ class _BookingCard extends StatelessWidget {
                       // Time
                       Row(
                         children: [
-                          Icon(Icons.access_time_rounded,
-                              size: 13.r,
-                              color: theme.colorScheme.primary),
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 13.r,
+                            color: theme.colorScheme.primary,
+                          ),
                           SizedBox(width: 4.w),
                           Flexible(
                             child: Text(
@@ -297,7 +303,9 @@ class _BookingCard extends StatelessWidget {
               '#${bookingId.toLowerCase()}',
               style: TextStyle(
                 fontSize: 10.sp,
-                color: theme.textTheme.bodyMedium?.color?.withOpacity(0.45),
+                color: theme.textTheme.bodyMedium?.color?.withValues(
+                  alpha: 0.45,
+                ),
                 fontFamily: 'monospace',
               ),
             ),
@@ -329,13 +337,30 @@ _StatusConfig _statusConfig(String status) {
 }
 
 String _formatBookingTime(String? scheduledTimestamp, String timeFallback) {
-  if (scheduledTimestamp == null || scheduledTimestamp.isEmpty) return timeFallback;
+  if (scheduledTimestamp == null || scheduledTimestamp.isEmpty) {
+    return timeFallback;
+  }
   try {
     final parsed = DateTime.parse(scheduledTimestamp).toLocal();
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final month = months[parsed.month - 1];
     final day = parsed.day;
-    final hour = parsed.hour > 12 ? parsed.hour - 12 : (parsed.hour == 0 ? 12 : parsed.hour);
+    final hour = parsed.hour > 12
+        ? parsed.hour - 12
+        : (parsed.hour == 0 ? 12 : parsed.hour);
     final period = parsed.hour >= 12 ? 'PM' : 'AM';
     final minute = parsed.minute.toString().padLeft(2, '0');
     return '$day $month, $hour:$minute $period';

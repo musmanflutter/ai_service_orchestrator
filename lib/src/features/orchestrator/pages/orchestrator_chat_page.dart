@@ -79,7 +79,9 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
-                  color: theme.textTheme.bodyMedium?.color?.withOpacity(0.65),
+                  color: theme.textTheme.bodyMedium?.color?.withValues(
+                    alpha: 0.65,
+                  ),
                 ),
               ),
             ],

@@ -35,10 +35,12 @@ class _ChatInputFieldState extends State<ChatInputField> {
           decoration: BoxDecoration(
             color: theme.cardTheme.color,
             borderRadius: BorderRadius.circular(32.r),
-            border: Border.all(color: theme.dividerColor.withOpacity(0.6)),
+            border: Border.all(
+              color: theme.dividerColor.withValues(alpha: 0.6),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 12.r,
                 offset: Offset(0, 4.h),
               ),
@@ -67,8 +69,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           vertical: 10.h,
                         ),
                         hintStyle: TextStyle(
-                          color: theme.textTheme.bodyMedium?.color?.withOpacity(
-                            0.45,
+                          color: theme.textTheme.bodyMedium?.color?.withValues(
+                            alpha: 0.45,
                           ),
                           fontSize: 14.sp,
                         ),
@@ -102,13 +104,13 @@ class _ChatInputFieldState extends State<ChatInputField> {
                       decoration: BoxDecoration(
                         color: canSend
                             ? theme.colorScheme.primary
-                            : theme.dividerColor.withOpacity(0.6),
+                            : theme.dividerColor.withValues(alpha: 0.6),
                         shape: BoxShape.circle,
                         boxShadow: canSend
                             ? [
                                 BoxShadow(
-                                  color: theme.colorScheme.primary.withOpacity(
-                                    0.25,
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.25,
                                   ),
                                   blurRadius: 8.r,
                                   offset: Offset(0, 3.h),
@@ -121,8 +123,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           Icons.arrow_upward_rounded,
                           color: canSend
                               ? Colors.white
-                              : theme.textTheme.bodyMedium?.color?.withOpacity(
-                                  0.4,
+                              : theme.textTheme.bodyMedium?.color?.withValues(
+                                  alpha: 0.4,
                                 ),
                           size: 20.r,
                         ),

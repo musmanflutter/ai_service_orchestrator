@@ -48,7 +48,7 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
                       Container(
                         padding: EdgeInsets.all(10.r),
                         decoration: BoxDecoration(
-                          color: primary.withOpacity(0.1),
+                          color: primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -94,8 +94,9 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
                 Expanded(
                   child: ListView.builder(
                     controller: scrollController,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w)
-                        .copyWith(bottom: 32.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                    ).copyWith(bottom: 32.h),
                     itemCount: steps.length + 1,
                     itemBuilder: (context, index) {
                       final isLast = index == steps.length;
@@ -165,10 +166,12 @@ List<_Step> _parseSteps(String raw) {
     // Best case: clean "Title: Detail" split
     final colonIdx = cleaned.indexOf(': ');
     if (colonIdx > 0 && colonIdx <= 50) {
-      steps.add(_Step(
-        _capitalise(cleaned.substring(0, colonIdx).trim()),
-        cleaned.substring(colonIdx + 2).trim(),
-      ));
+      steps.add(
+        _Step(
+          _capitalise(cleaned.substring(0, colonIdx).trim()),
+          cleaned.substring(colonIdx + 2).trim(),
+        ),
+      );
       continue;
     }
 
@@ -176,10 +179,12 @@ List<_Step> _parseSteps(String raw) {
     if (cleaned.length > 70) {
       final periodIdx = cleaned.indexOf('. ');
       if (periodIdx > 10 && periodIdx < 80) {
-        steps.add(_Step(
-          cleaned.substring(0, periodIdx + 1).trim(),
-          cleaned.substring(periodIdx + 1).trim(),
-        ));
+        steps.add(
+          _Step(
+            cleaned.substring(0, periodIdx + 1).trim(),
+            cleaned.substring(periodIdx + 1).trim(),
+          ),
+        );
         continue;
       }
 
@@ -236,7 +241,7 @@ class _TimelineStep extends StatelessWidget {
                   height: 20.r,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: dotColor.withOpacity(0.12),
+                    color: dotColor.withValues(alpha: 0.12),
                     border: Border.all(color: dotColor, width: 1.5),
                   ),
                   child: Center(
@@ -257,7 +262,7 @@ class _TimelineStep extends StatelessWidget {
                     child: Container(
                       width: 1.5,
                       margin: EdgeInsets.symmetric(vertical: 3.h),
-                      color: Colors.green.withOpacity(0.3),
+                      color: Colors.green.withValues(alpha: 0.3),
                     ),
                   ),
               ],

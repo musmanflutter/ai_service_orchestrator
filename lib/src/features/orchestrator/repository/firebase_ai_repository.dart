@@ -9,6 +9,7 @@ class FirebaseAiRepository {
   late final GenerativeModel _model;
 
   FirebaseAiRepository() {
+    // ignore: deprecated_member_use
     _model = FirebaseVertexAI.instance.generativeModel(
       model: 'gemini-2.5-flash',
     );

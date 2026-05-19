@@ -178,8 +178,10 @@ class ChatBubble extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     color: isUser
-                        ? Colors.white.withOpacity(0.7)
-                        : theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
+                        ? Colors.white.withValues(alpha: 0.7)
+                        : theme.textTheme.bodyMedium?.color?.withValues(
+                            alpha: 0.6,
+                          ),
                   ),
                 ),
               ],
@@ -221,8 +223,9 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
     )..repeat(reverse: true);
     _pulseAnim = Tween(begin: 0.5, end: 1.0).animate(_pulse);
     _stepTimer = Timer.periodic(const Duration(milliseconds: 1200), (_) {
-      if (mounted)
+      if (mounted) {
         setState(() => _activeStep = (_activeStep + 1) % _steps.length);
+      }
     });
   }
 
@@ -244,10 +247,10 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
         borderRadius: BorderRadius.circular(
           16.r,
         ).copyWith(bottomLeft: Radius.circular(4.r)),
-        border: Border.all(color: primary.withOpacity(0.25)),
+        border: Border.all(color: primary.withValues(alpha: 0.25)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -283,20 +286,20 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
                     children: [
                       AnimatedBuilder(
                         animation: _pulseAnim,
-                        builder: (_, __) => Container(
+                        builder: (_, _) => Container(
                           width: 10.r,
                           height: 10.r,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: isActive
-                                ? primary.withOpacity(_pulseAnim.value)
+                                ? primary.withValues(alpha: _pulseAnim.value)
                                 : isPast
                                 ? primary
-                                : Colors.grey.withOpacity(0.3),
+                                : Colors.grey.withValues(alpha: 0.3),
                             border: isActive || isPast
                                 ? null
                                 : Border.all(
-                                    color: Colors.grey.withOpacity(0.4),
+                                    color: Colors.grey.withValues(alpha: 0.4),
                                   ),
                           ),
                         ),
@@ -307,8 +310,8 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
                             width: 1.5,
                             margin: EdgeInsets.symmetric(vertical: 3.h),
                             color: isPast
-                                ? primary.withOpacity(0.4)
-                                : Colors.grey.withOpacity(0.2),
+                                ? primary.withValues(alpha: 0.4)
+                                : Colors.grey.withValues(alpha: 0.2),
                           ),
                         ),
                     ],
@@ -325,8 +328,8 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
                               ? theme.textTheme.bodyLarge?.color
                               : isPast
                               ? theme.textTheme.bodyMedium?.color
-                              : theme.textTheme.bodyMedium?.color?.withOpacity(
-                                  0.45,
+                              : theme.textTheme.bodyMedium?.color?.withValues(
+                                  alpha: 0.45,
                                 ),
                           fontWeight: isActive
                               ? FontWeight.w500
@@ -384,7 +387,9 @@ class _ReasoningWidgetState extends State<_ReasoningWidget>
 
   @override
   void dispose() {
-    for (final c in _dots) c.dispose();
+    for (final c in _dots) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -402,7 +407,7 @@ class _ReasoningWidgetState extends State<_ReasoningWidget>
         border: Border.all(color: theme.dividerColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8.r,
             offset: Offset(0, 2.h),
           ),
@@ -441,13 +446,13 @@ class _ReasoningWidgetState extends State<_ReasoningWidget>
               3,
               (i) => AnimatedBuilder(
                 animation: _anims[i],
-                builder: (_, __) => Container(
+                builder: (_, _) => Container(
                   margin: EdgeInsets.only(left: 3.w),
                   width: 7.r,
                   height: 7.r,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: primary.withOpacity(_anims[i].value),
+                    color: primary.withValues(alpha: _anims[i].value),
                   ),
                 ),
               ),

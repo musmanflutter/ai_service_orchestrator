@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ai_service_orchestrator/src/features/providers/models/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/controller/ai_controller.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/controller/chat_provider.dart';
@@ -160,7 +161,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.green.withOpacity(0.3),
+                      color: Colors.green.withValues(alpha: 0.3),
                       blurRadius: 16.r,
                       offset: Offset(0, 6.h),
                     ),
@@ -302,9 +303,9 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
       margin: EdgeInsets.only(top: 12.h),
       decoration: BoxDecoration(
         color: bookingStatus == 'completed'
-            ? Colors.green.withOpacity(0.06)
+            ? Colors.green.withValues(alpha: 0.06)
             : bookingStatus == 'cancelled'
-            ? Colors.red.withOpacity(0.06)
+            ? Colors.red.withValues(alpha: 0.06)
             : theme.cardTheme.color,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
@@ -318,7 +319,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 12.r,
             offset: Offset(0, 4.h),
           ),
@@ -338,10 +339,10 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   width: 60.r,
                   height: 60.r,
                   decoration: BoxDecoration(
-                    color: primary.withOpacity(0.1),
+                    color: primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: primary.withOpacity(0.2),
+                      color: primary.withValues(alpha: 0.2),
                       width: 2,
                     ),
                   ),
@@ -426,7 +427,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                                 vertical: 3.h,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.12),
+                                color: Colors.green.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: Row(
@@ -661,25 +662,43 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
     );
   }
 
-  List<String> _getWhyReasons(provider) {
+  List<String> _getWhyReasons(ServiceProvider provider) {
     final reasons = <String>[];
     if (provider.rating >= 4.7) reasons.add('Highest Rated in your area');
     if (provider.distanceKm <= 3.0) reasons.add('Quick Availability');
     if (provider.cancellationRate <= 0.05) reasons.add('Best Price');
-    if (provider.tags.contains('Fast Response'))
+    if (provider.tags.contains('Fast Response')) {
       reasons.add('Fast Response Time');
+    }
     if (reasons.isEmpty) reasons.add('Best Match for your request');
     return reasons.take(3).toList();
   }
 
   String _formatBookingTime(String? scheduledTimestamp, String timeFallback) {
-    if (scheduledTimestamp == null || scheduledTimestamp.isEmpty) return timeFallback;
+    if (scheduledTimestamp == null || scheduledTimestamp.isEmpty) {
+      return timeFallback;
+    }
     try {
       final parsed = DateTime.parse(scheduledTimestamp).toLocal();
-      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       final month = months[parsed.month - 1];
       final day = parsed.day;
-      final hour = parsed.hour > 12 ? parsed.hour - 12 : (parsed.hour == 0 ? 12 : parsed.hour);
+      final hour = parsed.hour > 12
+          ? parsed.hour - 12
+          : (parsed.hour == 0 ? 12 : parsed.hour);
       final period = parsed.hour >= 12 ? 'PM' : 'AM';
       final minute = parsed.minute.toString().padLeft(2, '0');
       return '$day $month, $hour:$minute $period';

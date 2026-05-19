@@ -45,60 +45,18 @@ Future<void> showFeedbackDialog(
                   SizedBox(height: 4.h),
 
                   // ── Sparkle + checkmark ────────────────────────────
-                  SizedBox(
-                    height: 80.h,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          top: 4.h,
-                          left: 24.w,
-                          child: _dot(Colors.green.shade200, 6.r),
-                        ),
-                        Positioned(
-                          top: 0,
-                          right: 28.w,
-                          child: _dot(Colors.teal.shade200, 5.r),
-                        ),
-                        Positioned(
-                          top: 18.h,
-                          right: 10.w,
-                          child: _dot(Colors.green.shade100, 4.r),
-                        ),
-                        Positioned(
-                          bottom: 6.h,
-                          left: 14.w,
-                          child: _dot(Colors.teal.shade300, 5.r),
-                        ),
-                        Positioned(
-                          bottom: 2.h,
-                          right: 16.w,
-                          child: _dot(Colors.green.shade300, 4.r),
-                        ),
-                        Positioned(
-                          top: 8.h,
-                          left: 60.w,
-                          child: _dot(Colors.lightGreen.shade200, 4.r),
-                        ),
-                        Container(
-                          width: 56.r,
-                          height: 56.r,
-                          decoration: BoxDecoration(
-                            color: Colors.green.shade50,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.green.shade200,
-                              width: 2,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.check_rounded,
-                            color: green,
-                            size: 28.r,
-                          ),
-                        ),
-                      ],
+                  Container(
+                    width: 56.r,
+                    height: 56.r,
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.green.shade200,
+                        width: 2,
+                      ),
                     ),
+                    child: Icon(Icons.check_rounded, color: green, size: 28.r),
                   ),
                   SizedBox(height: 8.h),
 
@@ -150,8 +108,8 @@ Future<void> showFeedbackDialog(
                     decoration: InputDecoration(
                       hintText: 'Share your feedback (optional)...',
                       hintStyle: TextStyle(
-                        color: theme.textTheme.bodyMedium?.color?.withOpacity(
-                          0.5,
+                        color: theme.textTheme.bodyMedium?.color?.withValues(
+                          alpha: 0.5,
                         ),
                         fontSize: 13.sp,
                       ),
@@ -377,8 +335,8 @@ Future<void> showBadRatingDialog(
                       decoration: InputDecoration(
                         hintText: 'Please describe what happened...',
                         hintStyle: TextStyle(
-                          color: theme.textTheme.bodyMedium?.color?.withOpacity(
-                            0.5,
+                          color: theme.textTheme.bodyMedium?.color?.withValues(
+                            alpha: 0.5,
                           ),
                           fontSize: 13.sp,
                         ),
@@ -452,10 +410,3 @@ Future<void> showBadRatingDialog(
     },
   );
 }
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-Widget _dot(Color color, double size) => Container(
-  width: size,
-  height: size,
-  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-);
