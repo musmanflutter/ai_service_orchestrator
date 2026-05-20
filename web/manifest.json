@@ -1,6 +1,6 @@
 {
-    "name": "ai_service_orchestrator",
-    "short_name": "ai_service_orchestrator",
+    "name": "Orchestra AI",
+    "short_name": "Orchestra AI",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

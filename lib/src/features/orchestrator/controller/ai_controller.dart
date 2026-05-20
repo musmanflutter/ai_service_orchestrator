@@ -26,7 +26,7 @@ class AiController extends _$AiController {
       ChatMessage(
         id: 'welcome',
         rawText:
-            '<chat>**Hi! I\'m AI Service Orchestrator** 👋\nHow can I help you today?</chat>',
+            '<chat>**Hi! I\'m Orchestra AI** 👋\nHow can I help you today?</chat>',
         sender: MessageSender.ai,
         timestamp: DateTime.now(),
       ),

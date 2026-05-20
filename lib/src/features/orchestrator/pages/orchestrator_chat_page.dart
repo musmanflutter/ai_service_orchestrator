@@ -67,7 +67,7 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'AI Service Orchestrator',
+                'Orchestra AI',
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
@@ -75,7 +75,7 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
                 ),
               ),
               Text(
-                'Powered by Agentic AI',
+                'Harmonizing Your Daily Services',
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
