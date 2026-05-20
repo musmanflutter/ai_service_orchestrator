@@ -15,3 +15,14 @@ void handleSendMessage(WidgetRef ref) {
   // 2. Stream AI response (Using standard Chatbot mode for now)
   ref.read(aiControllerProvider.notifier).streamAiResponse(text);
 }
+
+void handleSendMessageWithText(WidgetRef ref, String text) {
+  final trimmedText = text.trim();
+  if (trimmedText.isEmpty) return;
+
+  // 1. Add user message
+  ref.read(aiControllerProvider.notifier).addUserMessage(trimmedText);
+
+  // 2. Stream AI response
+  ref.read(aiControllerProvider.notifier).streamAiResponse(trimmedText);
+}

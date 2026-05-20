@@ -22,21 +22,50 @@ class ChatMessage {
   String get chatText {
     if (sender != MessageSender.ai) return rawText;
     
+    String text = '';
+    
     // If the full chat tag is closed
     final match = RegExp(r'<chat>(.*?)</chat>', dotAll: true).firstMatch(rawText);
-    if (match != null) return match.group(1)!.trim();
-    
-    // If chat tag is currently streaming
-    final openMatch = RegExp(r'<chat>(.*)', dotAll: true).firstMatch(rawText);
-    if (openMatch != null) return openMatch.group(1)!.trim();
-    
-    // If it hasn't reached the chat tag yet (still thinking/reasoning)
-    // Fallback: If it's a plain message with no XML formatting at all, just return it
-    if (!rawText.contains('<chat>') && !rawText.contains('<reasoning>')) {
-      return rawText;
+    if (match != null) {
+      text = match.group(1)!.trim();
+    } else {
+      // If chat tag is currently streaming
+      final openMatch = RegExp(r'<chat>(.*)', dotAll: true).firstMatch(rawText);
+      if (openMatch != null) {
+        text = openMatch.group(1)!.trim();
+      } else {
+        // Fallback: If it's a plain message with no XML formatting at all, just return it
+        if (!rawText.contains('<chat>') && !rawText.contains('<reasoning>')) {
+          text = rawText;
+        }
+      }
     }
     
-    return '';
+    // Robustly post-process 'text' to ensure NO XML tags or their contents leak to user screen.
+    // 1. Strip <asking_for> tag and its contents completely
+    text = text.replaceAll(RegExp(r'<asking_for>.*?</asking_for>', dotAll: true), '');
+    text = text.replaceAll(RegExp(r'<asking_for>.*', dotAll: true), '');
+    
+    // 2. Strip <provider> tag and its contents completely
+    text = text.replaceAll(RegExp(r'<provider>.*?</provider>', dotAll: true), '');
+    text = text.replaceAll(RegExp(r'<provider>.*', dotAll: true), '');
+    
+    // 3. Strip <context> tag and its contents completely
+    text = text.replaceAll(RegExp(r'<context>.*?</context>', dotAll: true), '');
+    text = text.replaceAll(RegExp(r'<context>.*', dotAll: true), '');
+    
+    // 4. Strip <reasoning> tag and its contents completely
+    text = text.replaceAll(RegExp(r'<reasoning>.*?</reasoning>', dotAll: true), '');
+    text = text.replaceAll(RegExp(r'<reasoning>.*', dotAll: true), '');
+    
+    // 5. Clean up any loose leftover tag brackets
+    text = text.replaceAll('</asking_for>', '');
+    text = text.replaceAll('</provider>', '');
+    text = text.replaceAll('</context>', '');
+    text = text.replaceAll('</reasoning>', '');
+    text = text.replaceAll('</chat>', '');
+    
+    return text.trim();
   }
 
   String get reasoningText {
@@ -70,5 +99,24 @@ class ChatMessage {
       }
     }
     return null;
+  }
+
+  String get askingFor {
+    if (sender != MessageSender.ai) return 'none';
+    final match = RegExp(r'<asking_for>(.*?)</asking_for>', dotAll: true).firstMatch(rawText);
+    if (match != null) return match.group(1)!.trim().toLowerCase();
+    
+    // Support streaming/unclosed tag
+    final openMatch = RegExp(r'<asking_for>(.*)', dotAll: true).firstMatch(rawText);
+    if (openMatch != null) {
+      final text = openMatch.group(1)!.trim().toLowerCase();
+      // If the text contains '<', it might have started another tag, so clip it
+      if (text.contains('<')) {
+        return text.split('<').first.trim();
+      }
+      return text;
+    }
+    
+    return 'none';
   }
 }

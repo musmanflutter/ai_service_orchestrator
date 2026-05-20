@@ -88,6 +88,12 @@ class AiController extends _$AiController {
       if (msg.isThinking) {
         final currentText = msg.rawText;
         String stoppedText = currentText;
+        
+        // Handle unclosed asking_for tag
+        if (stoppedText.contains('<asking_for>') && !stoppedText.contains('</asking_for>')) {
+          stoppedText = '${stoppedText.replaceAll(RegExp(r'<asking_for>.*', dotAll: true), '')}<asking_for>none</asking_for>';
+        }
+
         if (!stoppedText.contains('</chat>')) {
           if (stoppedText.contains('<chat>')) {
             stoppedText = '$stoppedText [Stopped by user]</chat>';

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ai_service_orchestrator/src/features/orchestrator/models/chat_message.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/reasoning_bottom_sheet.dart';
+import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/suggestion_chips.dart';
 import 'package:ai_service_orchestrator/src/features/providers/widgets/provider_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:markdown_widget/config/configs.dart';
@@ -17,8 +18,9 @@ String _formatTime(DateTime dt) {
 
 class ChatBubble extends StatelessWidget {
   final ChatMessage message;
+  final bool isLatest;
 
-  const ChatBubble({super.key, required this.message});
+  const ChatBubble({super.key, required this.message, this.isLatest = false});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,12 @@ class ChatBubble extends StatelessWidget {
       final isSuccess = message.rawText.contains('SYSTEM SUCCESS:');
       final isDark = theme.brightness == Brightness.dark;
       final bgColor = isSuccess
-          ? (isDark ? Colors.green.shade900.withValues(alpha: 0.2) : Colors.green.shade50)
-          : (isDark ? Colors.red.shade900.withValues(alpha: 0.2) : Colors.red.shade50);
+          ? (isDark
+                ? Colors.green.shade900.withValues(alpha: 0.2)
+                : Colors.green.shade50)
+          : (isDark
+                ? Colors.red.shade900.withValues(alpha: 0.2)
+                : Colors.red.shade50);
       final borderColor = isSuccess
           ? (isDark ? Colors.green.shade700 : Colors.green.shade200)
           : (isDark ? Colors.red.shade700 : Colors.red.shade200);
@@ -94,13 +100,23 @@ class ChatBubble extends StatelessWidget {
       );
     }
 
+    final showSuggestions =
+        !isUser &&
+        isLatest &&
+        SuggestionChipsList.detectSuggestionType(message) !=
+            SuggestionType.none;
+
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(
           bottom: 16.h,
           left: isUser ? 60.w : 0,
-          right: isUser ? 0 : (message.providerIds.isNotEmpty ? 16.w : 60.w),
+          right: isUser
+              ? 0
+              : ((message.providerIds.isNotEmpty || showSuggestions)
+                    ? 16.w
+                    : 60.w),
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
@@ -127,11 +143,14 @@ class ChatBubble extends StatelessWidget {
               config: MarkdownConfig(
                 configs: [
                   PConfig(
-                    textStyle: ((isUser
-                            ? theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onPrimary)
-                            : theme.textTheme.bodyLarge) ??
-                        const TextStyle())
-                    .copyWith(height: 1.5),
+                    textStyle:
+                        ((isUser
+                                    ? theme.textTheme.bodyLarge?.copyWith(
+                                        color: theme.colorScheme.onPrimary,
+                                      )
+                                    : theme.textTheme.bodyLarge) ??
+                                const TextStyle())
+                            .copyWith(height: 1.5),
                   ),
                 ],
               ),
@@ -168,6 +187,10 @@ class ChatBubble extends StatelessWidget {
                   providerId: id,
                   bookingContext: message.bookingContext,
                 ),
+            ],
+            if (showSuggestions) ...[
+              SizedBox(height: 8.h),
+              SuggestionChipsList(message: message),
             ],
             // Timestamp row
             SizedBox(height: 4.h),

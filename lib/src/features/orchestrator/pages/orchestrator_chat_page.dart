@@ -116,7 +116,12 @@ class _OrchestratorChatPageState extends ConsumerState<OrchestratorChatPage> {
                     padding: EdgeInsets.all(16.r),
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
-                      return ChatBubble(message: messages[index]);
+                      final message = messages[index];
+                      final isLastMessage = index == messages.length - 1;
+                      return ChatBubble(
+                        message: message,
+                        isLatest: isLastMessage,
+                      );
                     },
                   );
                 },

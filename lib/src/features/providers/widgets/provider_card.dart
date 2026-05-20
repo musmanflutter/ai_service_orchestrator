@@ -137,7 +137,9 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
     _subscribeToBooking(bookingId);
 
     final theme = Theme.of(context);
-    final successColor = theme.brightness == Brightness.dark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+    final successColor = theme.brightness == Brightness.dark
+        ? const Color(0xFF4ADE80)
+        : const Color(0xFF16A34A);
     final primary = theme.colorScheme.primary;
 
     showDialog(
@@ -266,9 +268,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
         children: [
           Text(
             label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontSize: 13.sp,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(fontSize: 13.sp),
           ),
           Text(
             value,
@@ -286,7 +286,9 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final successColor = theme.brightness == Brightness.dark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+    final successColor = theme.brightness == Brightness.dark
+        ? const Color(0xFF4ADE80)
+        : const Color(0xFF16A34A);
     final errorColor = theme.colorScheme.error;
     final provider = mockProviders
         .where((p) => p.id == widget.providerId)
@@ -353,7 +355,9 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   child: Center(
                     child: Text(
                       provider.avatarEmoji,
-                      style: theme.textTheme.headlineLarge?.copyWith(fontSize: 28.sp),
+                      style: theme.textTheme.headlineLarge?.copyWith(
+                        fontSize: 28.sp,
+                      ),
                     ),
                   ),
                 ),
@@ -384,7 +388,13 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                       // Rating + distance
                       Row(
                         children: [
-                          Icon(Icons.star, color: theme.brightness == Brightness.dark ? const Color(0xFFFBBF24) : const Color(0xFFD97706), size: 15.r),
+                          Icon(
+                            Icons.star,
+                            color: theme.brightness == Brightness.dark
+                                ? const Color(0xFFFBBF24)
+                                : const Color(0xFFD97706),
+                            size: 15.r,
+                          ),
                           SizedBox(width: 3.w),
                           Text(
                             '${provider.rating}',
@@ -423,6 +433,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                       if (provider.tags.isNotEmpty)
                         Wrap(
                           spacing: 6.w,
+                          runSpacing: 6.h,
                           children: provider.tags.map((tag) {
                             return Container(
                               padding: EdgeInsets.symmetric(
@@ -643,9 +654,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
             SizedBox(width: 5.w),
             Text(
               label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontSize: 11.sp,
-              ),
+              style: theme.textTheme.bodySmall?.copyWith(fontSize: 11.sp),
             ),
           ],
         ),
