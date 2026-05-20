@@ -1,4 +1,4 @@
-# 🚀 AI Service Orchestrator for the Informal Economy
+# 🚀 Orchestra AI: Service Orchestrator for the Informal Economy
 ### Powered by Google Antigravity & Agentic AI
 
 An end-to-end Agentic AI system that automates the lifecycle of informal economy service requests (plumbers, electricians, tutors, AC technicians, etc.) in Pakistan—transforming noisy natural-language messages into verified real-time scheduling, matching, dynamic pricing, and automated follow-ups.
@@ -8,14 +8,17 @@ An end-to-end Agentic AI system that automates the lifecycle of informal economy
 ## 📖 Table of Contents
 1. [Key Features & Capabilities](#-key-features--capabilities)
 2. [System Architecture](#-system-architecture)
-3. [Advanced Provider Matching Algorithm](#-advanced-provider-matching-algorithm)
-4. [Dynamic Pricing Formula](#-dynamic-pricing-formula)
-5. [Antigravity Orchestration & Reasoning Logs](#-antigravity-orchestration--reasoning-logs)
-6. [Database Schema (Cloud Firestore)](#-database-schema-cloud-firestore)
-7. [Stress-Test Demonstration Guide](#-stress-test-demonstration-guide)
-8. [Baseline Comparison (Agentic vs Heuristic)](#-baseline-comparison-agentic-vs-heuristic)
-9. [Cost, Latency & Scaling Estimates](#-cost-latency--scaling-estimates)
-10. [Assumptions, Limitations & Privacy](#-assumptions-limitations--privacy)
+3. [User Data Isolation & Device Identity](#-user-data-isolation--device-identity)
+4. [Real-time Stream Interruption & XML Repair](#-real-time-stream-interruption--xml-repair)
+5. [Interactive Material 3 Suggestion Chips](#-interactive-material-3-suggestion-chips)
+6. [Advanced Provider Matching Algorithm](#-advanced-provider-matching-algorithm)
+7. [Dynamic Pricing Formula](#-dynamic-pricing-formula)
+8. [Database Schema (Cloud Firestore)](#-database-schema-cloud-firestore)
+9. [Stress-Test Demonstration Guide](#-stress-test-demonstration-guide)
+10. [Theme Standardization & UI Polish](#-theme-standardization--ui-polish)
+11. [Baseline Comparison (Agentic vs Heuristic)](#-baseline-comparison-agentic-vs-heuristic)
+12. [Cost, Latency & Scaling Estimates](#-cost-latency--scaling-estimates)
+13. [Assumptions, Limitations & Privacy](#-assumptions-limitations--privacy)
 
 ---
 
@@ -25,7 +28,10 @@ An end-to-end Agentic AI system that automates the lifecycle of informal economy
 *   **Structured Reasoning Sheet:** Interactive "Reasoning Trace" bottom sheet displaying the agent's real-time step-by-step thinking loop.
 *   **End-to-End Simulation Pipeline:** Live database updates in Cloud Firestore, interactive visual confirmation receipts, en-route simulation, completion checks, and dynamic feedback loops.
 *   **Dual Hot-Swappable Viewports:** Hot-swapping dashboard switcher on the AppBar for judges to instantaneously switch between the customer chat interface and the mobile-responsive Admin/Provider panel.
-*   **Robust Exception Recovery:** Built-in dispute triggers, low-confidence warning prompts, slot conflicts, and automated senior technician fallback routing.
+*   **Real-time Response Interruption:** Tap the active "Stop" icon to immediately cancel the LLM response stream, safely halting execution with robust text-repair mechanics.
+*   **Missing-Slot Suggestion Chips:** Automatically analyzes missing slots in the AI's `<reasoning>` trace and presents beautiful swipeable recommendation chips for instant selection.
+*   **Device-Level Session Privacy:** Fully isolates bookings and background reminders using unique hardware-cached identifiers, preventing data leakages across concurrent user test sessions.
+*   **100% Theme-Based Typography & Colors:** Sleek adaptive layout built exclusively on central Material 3 tokens, featuring high-contrast light/dark mode components and glows.
 
 ---
 
@@ -43,11 +49,53 @@ graph TD
     Antigravity -->|5. Output XML Blocks| UI[Flutter Client UI]
     
     UI -->|Click 'Book Now'| DB[(Cloud Firestore)]
-    DB -->|Real-time Snapshot Sync| Listener[Booking Reminder Listener]
-    DB -->|Real-time Collection Stream| AdminPanel[Admin / Provider Panel]
+    DB -->|Isolated stream: where userId == deviceId| Listener[Booking Reminder Listener]
+    DB -->|Global view for Admin Dashboard| AdminPanel[Admin / Provider Panel]
     AdminPanel -->|Complete or Cancel| DB
     DB -->|Reactive Trigger| RatingBox[Dispute / Star Rating Loop]
+    
+    subgraph Controls
+        UI -->|Tap Stop Button| Interrupt[Cancel Stream Subscription]
+        Interrupt -->|XML Repair Engine| UI
+    end
 ```
+
+---
+
+## 🔒 User Data Isolation & Device Identity
+
+To support parallel judging sessions without data leakage, Orchestra AI implements a device-level **Session Isolation Protocol**:
+1. **Device Fingerprinting:** Upon first startup, a unique device user ID (e.g., `usr_1779357418931_485926`) is generated using a high-resolution millisecond timestamp and a secure random integer.
+2. **Persistent SharedPreferences Cache:** This identifier is stored locally on the client device. On subsequent app launches, it is loaded synchronously, guaranteeing the user maintains access to their historical bookings.
+3. **Database Level Isolation:** All booking documents written to Cloud Firestore store a `userId` field. Reads on both the Customer Booking History list and the Background Toast Booking Reminder Listener are restricted using SQL-like filters:
+   ```dart
+   FirebaseFirestore.instance
+       .collection('bookings')
+       .where('userId', isEqualTo: currentDeviceUserId)
+   ```
+4. **Preserved Global Admin Overviews:** The Admin Dashboard purposefully runs unfiltered, allowing administrators to supervise all active bookings, cancellations, and completions globally.
+
+---
+
+## ⏹️ Real-time Stream Interruption & XML Repair
+
+When the AI orchestrator is generating a stream, Orchestra AI equips the user with full execution control:
+* **UI Morphs & State Locks:** The Send text field is locked, input is disabled, and the hint text updates to *"Orchestrator is thinking..."*. The send icon transforms dynamically into a red **Stop** icon.
+* **Active Stream Cancellation:** Clicking the Stop button cancels the active `StreamSubscription` instantly, avoiding wasted tokens and terminating server execution.
+* **Fault-Tolerant XML Repair:** Abrupt cancellations can truncate XML-like formatting tags (e.g. `<chat>` or `<reasoning>`), which would break standard Markdown and UI parsers. Our stream buffer engine interceptor automatically:
+  1. Scans the stream for open, unclosed tags.
+  2. Automatically appends the matching closing tags (e.g., `</chat>`, `</reasoning>`).
+  3. Appends a distinct `[Stopped by user]` tag to informatively indicate termination.
+
+---
+
+## ⚡ Interactive Material 3 Suggestion Chips
+
+To eliminate typing friction and speed up booking collection, Orchestra AI implements conditional suggestion chips:
+* **Automated Slot Extraction:** The client-side parser scans the latest reasoning XML block. If it detects missing slots (e.g., *Service is MISSING*, *Location is MISSING*, or *Time is MISSING*), it injects specific suggestion chips.
+* **Semantic Keyword Fallback:** If reasoning tags are unavailable, a semantic text analyzer checks the chat history for pending slot collections.
+* **Zero Clutter Rendering:** Suggestion chips only render under the **very latest** active chat bubble and vanish instantly once a choice is selected or when a matching provider card is served.
+* **Instant Dispatch:** Tapping a chip bypasses typing and commits the value as a formal user message, driving the conversation forward.
 
 ---
 
@@ -80,23 +128,6 @@ $$\text{Dynamic Quote} = \text{Base Fare} + \text{Urgency Surge} + \text{Distanc
 
 ---
 
-## 🧠 Antigravity Orchestration & Reasoning Logs
-
-Antigravity acts as the central brain orchestrating intent understanding, pricing, matching, and escalation workflows. Every agent response compiles an open reasoning log showing absolute transparency:
-
-```xml
-<reasoning>
-- Language confidence: 0.98 score for mixed input "kal subah G-13 mein AC technician"
-- Job complexity: Complex level due to cooling failure description
-- Matching factors: Ranks Ali AC Services (2.1km, 4.9 rating) against Tariq (1.2km, 4.5 rating)
-- Pricing logic: Base rate 1500 + Urgency surge 300 + Travel surcharge 100 = Total PKR 1900
-- Workload balance: Confirmed Ali AC Services is under capacity and within travel buffer limits
-- Decision rationale: Recommends Ali AC Services due to higher reliability (100% on-time score) and specialized repair reviews
-</reasoning>
-```
-
----
-
 ## 🗄️ Database Schema (Cloud Firestore)
 
 Dynamic state transitions are persisted in Firebase Firestore under the `bookings` collection:
@@ -104,6 +135,7 @@ Dynamic state transitions are persisted in Firebase Firestore under the `booking
 ```json
 {
   "id": "BKG-9382103",
+  "userId": "usr_1779357418931_485926",
   "providerId": "p1",
   "providerName": "Ali AC Services",
   "service": "AC Technician",
@@ -124,7 +156,7 @@ Dynamic state transitions are persisted in Firebase Firestore under the `booking
 
 ## 🧪 Stress-Test Demonstration Guide
 
-Judges can stress-test five crucial scenarios directly within our live prototype:
+Judges can stress-test seven crucial scenarios directly within our live prototype:
 
 ### Scenario 1: Ambiguous or Noisy Urdu Input
 *   **Test Input:** *"AC kharab ho gaya hai"* (no location/time).
@@ -145,6 +177,34 @@ Judges can stress-test five crucial scenarios directly within our live prototype
     2. Toggle back to the Chat page. The Star Rating dialog immediately triggers.
     3. Select **1 or 2 Stars**. The system dynamically opens a secondary dispute feedback overlay with custom issue chips (e.g. *Price Disagreement*, *Overrun*, *No-show*) to route complaints into our human-simulation escalation protocol.
 
+### Scenario 5: Real-time Response Stream Interruption
+*   **Action Steps:**
+    1. Send a request (e.g., *"Plumber required in DHA tomorrow"*).
+    2. While the text is generating, immediately tap the red **Stop (Square)** button.
+    3. The generation halts immediately. You will see the structured text block safely repaired and closed with a clear `[Stopped by user]` tag, and your text input will unlock immediately.
+
+### Scenario 6: Multi-Device Test Isolation
+*   **Action Steps:**
+    1. Open the web app in two separate browser profiles or tabs.
+    2. Book a plumber in Tab A.
+    3. Check the "My Bookings" Drawer in Tab B. Notice that it remains blank, preventing cross-user leakages.
+    4. Switch to the Admin View. Notice that the administrator sees all bookings from both Tab A and Tab B, perfectly illustrating isolated customer accounts alongside centralized admin control.
+
+### Scenario 7: Missing Slot Extraction & Suggestion Chips
+*   **Action Steps:**
+    1. Send *"Need an electrician"* (location and time are missing).
+    2. Notice a beautiful horizontal row of recommendation chips (e.g., locations: *G-13, E-11, DHA*; times: *Today, Tomorrow*) pop up directly under the AI chat bubble.
+    3. Tap *Tomorrow* or *G-13* to instantly submit it without typing.
+
+---
+
+## 🎨 Theme Standardization & UI Polish
+
+The user interface of Orchestra AI has been meticulously polished to deliver a state-of-the-art Material 3 experience:
+*   **100% Token-Driven Typographies:** Absolutely zero ad-hoc hardcoded font styles. Every header, subtitle, and body text is derived strictly from the unified `ThemeData.textTheme`. Local tweaks (e.g., semi-bold, height, spacing) are applied strictly using structured `copyWith` methods.
+*   **Premium Glow Asset Brandings:** Uses a custom-engineered `logo_transparent.png` asset. Stripped of its black background using math-based alpha unpremultiplication, this logo preserves vibrant emissive neon glows without any black fringe, making it look beautiful over any backdrop.
+*   **Adaptive Dark/Light Accent Schemes:** Evaluates dark and light contrast dynamically to adjust colors. Rating stars automatically tint to warm Amber (`Color(0xFFFBBF24)` in dark and `Color(0xFFD97706)` in light). High-fidelity success green and error red states adapt gracefully to soft tints for light themes and deep saturated fills for dark themes.
+
 ---
 
 ## ⚖️ Baseline Comparison (Agentic vs Heuristic)
@@ -155,6 +215,9 @@ Judges can stress-test five crucial scenarios directly within our live prototype
 | **Pricing** | Fixed static lists from a catalog. | Urgency-aware demand surge pricing with dynamic distance and complexity adjustments. |
 | **Scheduling** | Allows overlapping calendars, leading to no-shows. | Smart slots, travel-time buffers, and automated fallback re-routing. |
 | **Noisy inputs** | Fails on phonetic/slang mixed Urdu and Urdu script. | Multi-turn slot filling with low-confidence checkbacks. |
+| **Stream Interruption** | UI locks up or runs out of control until done. | Real-time active subscription cancel with automated layout-safe XML repair. |
+| **Privacy & Isolation** | Share global states, causing multi-user leaks. | Hardware SharedPreferences device ID sandbox. |
+| **Interaction Velocity** | Forces heavy key entries and complex forms. | Dynamic Material 3 Suggestion Chips parsed from live thinking traces. |
 | **Disputes** | Requires manual email support tickets. | Automatic negative feedback detection and real-time compensatory mitigation. |
 
 ---
@@ -172,3 +235,4 @@ Judges can stress-test five crucial scenarios directly within our live prototype
 *   **Privacy Guard:** Synthetic mock data is utilized for all providers and locations to secure personal identification information (PII).
 *   **Assumptions:** Assumes a reliable internet connection is available for Firestore updates. Local caching handles offline fallbacks gracefully.
 *   **Limitations:** Real map routings utilize simulated distances (`distanceKm`) in this prototype. Production scaling will directly swap this for Google Maps/Places APIs.
+

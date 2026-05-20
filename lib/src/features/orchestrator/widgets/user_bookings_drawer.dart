@@ -29,29 +29,13 @@ class UserBookingsDrawer extends ConsumerWidget {
               padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 8.h),
               child: Row(
                 children: [
-                  Container(
-                    width: 44.r,
-                    height: 44.r,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(
-                            alpha: 0.2,
-                          ),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(22.r),
-                      child: Image.asset(
-                        'assets/images/app_logo.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  Image.asset(
+                    'assets/images/logo_transparent.png',
+                    width: 40.r,
+                    height: 40.r,
+                    fit: BoxFit.cover,
                   ),
+
                   SizedBox(width: 12.w),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,6 +72,7 @@ class UserBookingsDrawer extends ConsumerWidget {
                 ],
               ),
             ),
+
             Divider(color: theme.dividerColor, height: 1),
 
             // ── Bookings list ────────────────────────────────────────
