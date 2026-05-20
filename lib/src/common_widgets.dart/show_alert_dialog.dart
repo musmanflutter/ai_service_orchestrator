@@ -12,14 +12,13 @@ Future<bool?> showAlertDialog({
     context: context,
     builder: (BuildContext context) {
       final theme = Theme.of(context);
-      final isDark = theme.brightness == Brightness.dark;
 
       return Dialog(
         backgroundColor: theme.scaffoldBackgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
           side: BorderSide(
-            color: isDark ? const Color(0xFF334155) : const Color(0xFFE9ECEF),
+            color: theme.colorScheme.outline,
             width: 1,
           ),
         ),
@@ -36,12 +35,12 @@ Future<bool?> showAlertDialog({
                   Container(
                     padding: EdgeInsets.all(8.r),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFDC3545).withValues(alpha: 0.1),
+                      color: theme.colorScheme.error.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.logout_rounded,
-                      color: const Color(0xFFDC3545),
+                      color: theme.colorScheme.error,
                       size: 24.r,
                     ),
                   ),
@@ -51,7 +50,6 @@ Future<bool?> showAlertDialog({
                       titleText,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18.sp,
                       ),
                     ),
                   ),
@@ -61,13 +59,7 @@ Future<bool?> showAlertDialog({
               // Content Text
               Text(
                 content,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 14.sp,
-                  height: 1.5,
-                  color: isDark
-                      ? const Color(0xFF94A3B8)
-                      : const Color(0xFF6C757D),
-                ),
+                style: theme.textTheme.bodyMedium,
               ),
               SizedBox(height: 24.h),
               // Action Buttons
@@ -88,12 +80,8 @@ Future<bool?> showAlertDialog({
                     ),
                     child: Text(
                       cancelActionText,
-                      style: TextStyle(
-                        fontSize: 14.sp,
+                      style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? const Color(0xFF94A3B8)
-                            : const Color(0xFF6C757D),
                       ),
                     ),
                   ),
@@ -102,8 +90,8 @@ Future<bool?> showAlertDialog({
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(true),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDC3545),
-                      foregroundColor: Colors.white,
+                      backgroundColor: theme.colorScheme.error,
+                      foregroundColor: theme.colorScheme.onError,
                       padding: EdgeInsets.symmetric(
                         horizontal: 20.w,
                         vertical: 12.h,
@@ -115,9 +103,9 @@ Future<bool?> showAlertDialog({
                     ),
                     child: Text(
                       defaultActionText,
-                      style: TextStyle(
-                        fontSize: 14.sp,
+                      style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onError,
                       ),
                     ),
                   ),
@@ -130,3 +118,4 @@ Future<bool?> showAlertDialog({
     },
   );
 }
+

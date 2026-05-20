@@ -60,7 +60,7 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
                       SizedBox(width: 10.w),
                       Text(
                         'Reasoning Trace',
-                        style: TextStyle(
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                           color: theme.textTheme.bodyLarge?.color,
@@ -224,7 +224,8 @@ class _TimelineStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final dotColor = isFinal ? primary : Colors.green;
+    final successColor = theme.brightness == Brightness.dark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+    final dotColor = isFinal ? primary : successColor;
 
     return IntrinsicHeight(
       child: Row(
@@ -254,7 +255,7 @@ class _TimelineStep extends StatelessWidget {
                               color: primary,
                             ),
                           )
-                        : Icon(Icons.check, size: 11.r, color: Colors.green),
+                        : Icon(Icons.check, size: 11.r, color: successColor),
                   ),
                 ),
                 if (!isLast)
@@ -262,7 +263,7 @@ class _TimelineStep extends StatelessWidget {
                     child: Container(
                       width: 1.5,
                       margin: EdgeInsets.symmetric(vertical: 3.h),
-                      color: Colors.green.withValues(alpha: 0.3),
+                      color: successColor.withValues(alpha: 0.3),
                     ),
                   ),
               ],
@@ -280,7 +281,7 @@ class _TimelineStep extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       color: isFinal
@@ -291,7 +292,7 @@ class _TimelineStep extends StatelessWidget {
                   SizedBox(height: 2.h),
                   Text(
                     subtitle,
-                    style: TextStyle(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       fontSize: 12.sp,
                       color: theme.textTheme.bodyMedium?.color,
                     ),

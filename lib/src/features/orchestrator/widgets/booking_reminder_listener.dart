@@ -82,20 +82,23 @@ class _BookingReminderListenerState
               _notifiedBookingIds.add(bookingId);
 
               if (mounted) {
+                final theme = Theme.of(context);
                 toastification.show(
                   context: context,
                   type: ToastificationType.warning,
                   style: ToastificationStyle.fillColored,
-                  title: const Text(
+                  title: Text(
                     'Booking Reminder!',
-                    style: TextStyle(
+                    style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                   description: Text(
                     'Your $service provider is arriving in less than 1 minute!',
-                    style: const TextStyle(color: Colors.white),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                   alignment: Alignment.topCenter,
                   autoCloseDuration: const Duration(seconds: 10),

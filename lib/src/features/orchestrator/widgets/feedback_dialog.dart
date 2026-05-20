@@ -14,7 +14,12 @@ Future<void> showFeedbackDialog(
     barrierDismissible: false,
     builder: (context) {
       final theme = Theme.of(context);
-      final green = Colors.green.shade600;
+      final isDark = theme.brightness == Brightness.dark;
+      final green = isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+      final greenBg = isDark ? const Color(0xFF143A24) : const Color(0xFFE8F5E9);
+      final greenBorder = isDark ? const Color(0xFF1E5235) : const Color(0xFFA5D6A7);
+      final starActive = isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706);
+      final starInactive = isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB);
 
       return StatefulBuilder(
         builder: (context, setState) {
@@ -49,10 +54,10 @@ Future<void> showFeedbackDialog(
                     width: 56.r,
                     height: 56.r,
                     decoration: BoxDecoration(
-                      color: Colors.green.shade50,
+                      color: greenBg,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Colors.green.shade200,
+                        color: greenBorder,
                         width: 2,
                       ),
                     ),
@@ -61,18 +66,19 @@ Future<void> showFeedbackDialog(
                   SizedBox(height: 8.h),
 
                   // ── Title ──────────────────────────────────────────
-                  Text(
+                   Text(
                     'Job Completed!',
-                    style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       color: green,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 6.h),
                   Text(
                     'How was your experience?',
-                    style: TextStyle(fontSize: 14.sp, color: green),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: green,
+                    ),
                   ),
                   SizedBox(height: 20.h),
 
@@ -90,8 +96,8 @@ Future<void> showFeedbackDialog(
                                 ? Icons.star_rounded
                                 : Icons.star_outline_rounded,
                             color: filled
-                                ? Colors.green.shade500
-                                : Colors.grey.shade300,
+                                ? starActive
+                                : starInactive,
                             size: 40.r,
                           ),
                         ),
@@ -104,10 +110,12 @@ Future<void> showFeedbackDialog(
                   TextField(
                     controller: commentController,
                     maxLines: 3,
-                    style: TextStyle(fontSize: 13.sp),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontSize: 13.sp,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'Share your feedback (optional)...',
-                      hintStyle: TextStyle(
+                      hintStyle: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.textTheme.bodyMedium?.color?.withValues(
                           alpha: 0.5,
                         ),
@@ -155,7 +163,7 @@ Future<void> showFeedbackDialog(
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: green,
-                        foregroundColor: Colors.white,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         elevation: 0,
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(
@@ -164,9 +172,9 @@ Future<void> showFeedbackDialog(
                       ),
                       child: Text(
                         'Submit Rating',
-                        style: TextStyle(
+                        style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontSize: 15.sp,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -204,7 +212,10 @@ Future<void> showBadRatingDialog(
     barrierDismissible: false,
     builder: (context) {
       final theme = Theme.of(context);
-      final red = Colors.red.shade600;
+      final isDark = theme.brightness == Brightness.dark;
+      final red = theme.colorScheme.error;
+      final redBg = isDark ? const Color(0xFF3B1313) : const Color(0xFFFFEBEE);
+      final redBorder = isDark ? const Color(0xFF5C1D1D) : const Color(0xFFFFCDD2);
 
       return StatefulBuilder(
         builder: (context, setState) {
@@ -245,9 +256,9 @@ Future<void> showBadRatingDialog(
                     width: 52.r,
                     height: 52.r,
                     decoration: BoxDecoration(
-                      color: Colors.red.shade50,
+                      color: redBg,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.red.shade200, width: 2),
+                      border: Border.all(color: redBorder, width: 2),
                     ),
                     child: Icon(
                       Icons.sentiment_dissatisfied_rounded,
@@ -258,10 +269,9 @@ Future<void> showBadRatingDialog(
                   SizedBox(height: 6.h),
 
                   // ── Title ────────────────────────────────────────
-                  Text(
+                   Text(
                     'We\'re Sorry to Hear That 😔',
-                    style: TextStyle(
-                      fontSize: 18.sp,
+                    style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: red,
                     ),
@@ -270,9 +280,8 @@ Future<void> showBadRatingDialog(
                   SizedBox(height: 6.h),
                   Text(
                     'What went wrong?',
-                    style: TextStyle(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontSize: 13.sp,
-                      color: theme.textTheme.bodyMedium?.color,
                     ),
                   ),
                   SizedBox(height: 18.h),
@@ -300,7 +309,7 @@ Future<void> showBadRatingDialog(
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? Colors.red.shade50
+                                ? redBg
                                 : theme.colorScheme.surface,
                             borderRadius: BorderRadius.circular(20.r),
                             border: Border.all(
@@ -310,7 +319,7 @@ Future<void> showBadRatingDialog(
                           ),
                           child: Text(
                             issue,
-                            style: TextStyle(
+                             style: theme.textTheme.bodySmall?.copyWith(
                               fontSize: 13.sp,
                               fontWeight: isSelected
                                   ? FontWeight.w600
@@ -331,10 +340,12 @@ Future<void> showBadRatingDialog(
                     TextField(
                       controller: otherController,
                       maxLines: 2,
-                      style: TextStyle(fontSize: 13.sp),
+                       style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: 13.sp,
+                      ),
                       decoration: InputDecoration(
                         hintText: 'Please describe what happened...',
-                        hintStyle: TextStyle(
+                        hintStyle: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.textTheme.bodyMedium?.color?.withValues(
                             alpha: 0.5,
                           ),
@@ -348,11 +359,11 @@ Future<void> showBadRatingDialog(
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: Colors.red.shade200),
+                          borderSide: BorderSide(color: redBorder),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: BorderSide(color: Colors.red.shade200),
+                          borderSide: BorderSide(color: redBorder),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
@@ -384,8 +395,8 @@ Future<void> showBadRatingDialog(
                         onSubmit(rating, combined);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red.shade400,
-                        foregroundColor: Colors.white,
+                        backgroundColor: red.withValues(alpha: 0.8),
+                        foregroundColor: theme.colorScheme.onError,
                         elevation: 0,
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(
@@ -394,9 +405,9 @@ Future<void> showBadRatingDialog(
                       ),
                       child: Text(
                         'Submit Feedback',
-                        style: TextStyle(
+                        style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontSize: 15.sp,
+                          color: theme.colorScheme.onError,
                         ),
                       ),
                     ),

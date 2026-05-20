@@ -19,29 +19,73 @@ class AppTheme {
         primary: BaseColors.primary,
         secondary: BaseColors.secondary,
         error: BaseColors.error,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: BaseColors.textPrimary,
+        onError: Colors.white,
+        outline: BaseColors.border,
       ),
 
       // TYPOGRAPHY
       textTheme: GoogleFonts.interTextTheme().copyWith(
+        headlineLarge: GoogleFonts.inter(
+          fontSize: 28.sp,
+          fontWeight: FontWeight.w800,
+          color: BaseColors.textPrimary,
+        ),
         headlineMedium: GoogleFonts.inter(
           fontSize: 24.sp,
           fontWeight: FontWeight.w700,
           color: BaseColors.textPrimary,
         ),
-
+        headlineSmall: GoogleFonts.inter(
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w700,
+          color: BaseColors.textPrimary,
+        ),
         titleLarge: GoogleFonts.inter(
           fontSize: 20.sp,
           fontWeight: FontWeight.w600,
           color: BaseColors.textPrimary,
         ),
-
-        bodyLarge: GoogleFonts.inter(
+        titleMedium: GoogleFonts.inter(
           fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
           color: BaseColors.textPrimary,
         ),
-
+        titleSmall: GoogleFonts.inter(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w500,
+          color: BaseColors.textPrimary,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w400,
+          color: BaseColors.textPrimary,
+        ),
         bodyMedium: GoogleFonts.inter(
           fontSize: 14.sp,
+          fontWeight: FontWeight.w400,
+          color: BaseColors.textSecondary,
+        ),
+        bodySmall: GoogleFonts.inter(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w400,
+          color: BaseColors.textSecondary,
+        ),
+        labelLarge: GoogleFonts.inter(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w600,
+          color: BaseColors.primary,
+        ),
+        labelMedium: GoogleFonts.inter(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+          color: BaseColors.textSecondary,
+        ),
+        labelSmall: GoogleFonts.inter(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w400,
           color: BaseColors.textSecondary,
         ),
       ),
@@ -134,29 +178,73 @@ class AppTheme {
         primary: BaseColors.darkPrimary,
         secondary: BaseColors.darkSecondary,
         error: BaseColors.darkError,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: BaseColors.darkTextPrimary,
+        onError: Colors.white,
+        outline: BaseColors.darkBorder,
       ),
 
       // TYPOGRAPHY
       textTheme: GoogleFonts.interTextTheme().copyWith(
+        headlineLarge: GoogleFonts.inter(
+          fontSize: 28.sp,
+          fontWeight: FontWeight.w800,
+          color: BaseColors.darkTextPrimary,
+        ),
         headlineMedium: GoogleFonts.inter(
           fontSize: 24.sp,
           fontWeight: FontWeight.w700,
           color: BaseColors.darkTextPrimary,
         ),
-
+        headlineSmall: GoogleFonts.inter(
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w700,
+          color: BaseColors.darkTextPrimary,
+        ),
         titleLarge: GoogleFonts.inter(
           fontSize: 20.sp,
           fontWeight: FontWeight.w600,
           color: BaseColors.darkTextPrimary,
         ),
-
-        bodyLarge: GoogleFonts.inter(
+        titleMedium: GoogleFonts.inter(
           fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
           color: BaseColors.darkTextPrimary,
         ),
-
+        titleSmall: GoogleFonts.inter(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w500,
+          color: BaseColors.darkTextPrimary,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w400,
+          color: BaseColors.darkTextPrimary,
+        ),
         bodyMedium: GoogleFonts.inter(
           fontSize: 14.sp,
+          fontWeight: FontWeight.w400,
+          color: BaseColors.darkTextSecondary,
+        ),
+        bodySmall: GoogleFonts.inter(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w400,
+          color: BaseColors.darkTextSecondary,
+        ),
+        labelLarge: GoogleFonts.inter(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w600,
+          color: BaseColors.darkPrimary,
+        ),
+        labelMedium: GoogleFonts.inter(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
+          color: BaseColors.darkTextSecondary,
+        ),
+        labelSmall: GoogleFonts.inter(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.w400,
           color: BaseColors.darkTextSecondary,
         ),
       ),

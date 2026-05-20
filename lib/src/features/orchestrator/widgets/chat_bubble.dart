@@ -27,11 +27,16 @@ class ChatBubble extends StatelessWidget {
 
     if (message.sender == MessageSender.system) {
       final isSuccess = message.rawText.contains('SYSTEM SUCCESS:');
-      final bgColor = isSuccess ? Colors.green.shade50 : Colors.red.shade50;
+      final isDark = theme.brightness == Brightness.dark;
+      final bgColor = isSuccess
+          ? (isDark ? Colors.green.shade900.withValues(alpha: 0.2) : Colors.green.shade50)
+          : (isDark ? Colors.red.shade900.withValues(alpha: 0.2) : Colors.red.shade50);
       final borderColor = isSuccess
-          ? Colors.green.shade200
-          : Colors.red.shade200;
-      final iconColor = isSuccess ? Colors.green : Colors.red;
+          ? (isDark ? Colors.green.shade700 : Colors.green.shade200)
+          : (isDark ? Colors.red.shade700 : Colors.red.shade200);
+      final iconColor = isSuccess
+          ? (isDark ? Colors.green.shade300 : Colors.green.shade700)
+          : (isDark ? Colors.red.shade300 : Colors.red.shade700);
       final iconData = isSuccess
           ? Icons.check_circle_outline
           : Icons.warning_amber_rounded;
@@ -54,9 +59,8 @@ class ChatBubble extends StatelessWidget {
               Expanded(
                 child: Text(
                   message.rawText,
-                  style: TextStyle(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     color: iconColor,
-                    fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -123,13 +127,11 @@ class ChatBubble extends StatelessWidget {
               config: MarkdownConfig(
                 configs: [
                   PConfig(
-                    textStyle: TextStyle(
-                      color: isUser
-                          ? Colors.white
-                          : theme.textTheme.bodyLarge?.color,
-                      fontSize: 15.sp,
-                      height: 1.5,
-                    ),
+                    textStyle: ((isUser
+                            ? theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onPrimary)
+                            : theme.textTheme.bodyLarge) ??
+                        const TextStyle())
+                    .copyWith(height: 1.5),
                   ),
                 ],
               ),
@@ -151,8 +153,7 @@ class ChatBubble extends StatelessWidget {
                     SizedBox(width: 4.w),
                     Text(
                       "View Reasoning Trace",
-                      style: TextStyle(
-                        fontSize: 12.sp,
+                      style: theme.textTheme.labelMedium?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
                       ),
@@ -175,10 +176,9 @@ class ChatBubble extends StatelessWidget {
               children: [
                 Text(
                   _formatTime(message.timestamp),
-                  style: TextStyle(
-                    fontSize: 11.sp,
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: isUser
-                        ? Colors.white.withValues(alpha: 0.7)
+                        ? theme.colorScheme.onPrimary.withValues(alpha: 0.7)
                         : theme.textTheme.bodyMedium?.color?.withValues(
                             alpha: 0.6,
                           ),
@@ -265,9 +265,8 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
               SizedBox(width: 8.w),
               Text(
                 'Agent is orchestrating workflow...',
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 14.sp,
                   color: primary,
                 ),
               ),
@@ -322,7 +321,7 @@ class _OrchestratingWidgetState extends State<_OrchestratingWidget>
                       padding: EdgeInsets.only(bottom: isLast ? 0 : 12.h),
                       child: Text(
                         _steps[i],
-                        style: TextStyle(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 13.sp,
                           color: isActive
                               ? theme.textTheme.bodyLarge?.color
@@ -423,7 +422,7 @@ class _ReasoningWidgetState extends State<_ReasoningWidget>
               children: [
                 Text(
                   'Agent is reasoning...',
-                  style: TextStyle(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 13.sp,
                     color: theme.textTheme.bodyLarge?.color,
@@ -432,7 +431,7 @@ class _ReasoningWidgetState extends State<_ReasoningWidget>
                 SizedBox(height: 2.h),
                 Text(
                   'Analyzing providers for the best match',
-                  style: TextStyle(
+                  style: theme.textTheme.bodySmall?.copyWith(
                     fontSize: 12.sp,
                     color: theme.textTheme.bodyMedium?.color,
                   ),

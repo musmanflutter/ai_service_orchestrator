@@ -33,7 +33,7 @@ class InfoRow extends StatelessWidget {
             SizedBox(width: 8.w),
             Text(
               '$label: ',
-              style: TextStyle(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 12.sp,
                 color: theme.textTheme.bodyMedium?.color?.withValues(
                   alpha: 0.7,
@@ -42,7 +42,7 @@ class InfoRow extends StatelessWidget {
             ),
             Text(
               value,
-              style: TextStyle(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: valueColor ?? theme.textTheme.bodyLarge?.color,
@@ -55,7 +55,7 @@ class InfoRow extends StatelessWidget {
             padding: EdgeInsets.only(left: 22.w, top: 2.h),
             child: Text(
               subtitle!,
-              style: TextStyle(
+              style: theme.textTheme.labelSmall?.copyWith(
                 fontSize: 10.sp,
                 color: theme.textTheme.bodyMedium?.color?.withValues(
                   alpha: 0.55,

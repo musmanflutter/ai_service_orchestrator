@@ -58,7 +58,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                       onChanged: (val) {
                         ref.read(chatInputProvider.notifier).state = val;
                       },
-                      style: TextStyle(fontSize: 14.sp),
+                      style: theme.textTheme.bodyMedium,
                       decoration: InputDecoration(
                         hintText: "Type your message...",
                         border: InputBorder.none,
@@ -68,11 +68,10 @@ class _ChatInputFieldState extends State<ChatInputField> {
                           horizontal: 4.w,
                           vertical: 10.h,
                         ),
-                        hintStyle: TextStyle(
+                        hintStyle: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.textTheme.bodyMedium?.color?.withValues(
                             alpha: 0.45,
                           ),
-                          fontSize: 14.sp,
                         ),
                       ),
                     );
@@ -122,7 +121,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         child: Icon(
                           Icons.arrow_upward_rounded,
                           color: canSend
-                              ? Colors.white
+                              ? theme.colorScheme.onPrimary
                               : theme.textTheme.bodyMedium?.color?.withValues(
                                   alpha: 0.4,
                                 ),

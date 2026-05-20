@@ -137,6 +137,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
     _subscribeToBooking(bookingId);
 
     final theme = Theme.of(context);
+    final successColor = theme.brightness == Brightness.dark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
     final primary = theme.colorScheme.primary;
 
     showDialog(
@@ -157,11 +158,11 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                 width: 68.r,
                 height: 68.r,
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: successColor,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.green.withValues(alpha: 0.3),
+                      color: successColor.withValues(alpha: 0.3),
                       blurRadius: 16.r,
                       offset: Offset(0, 6.h),
                     ),
@@ -179,19 +180,16 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
               // ── Title + subtitle ──────────────────────────────────
               Text(
                 'Booking Confirmed!',
-                style: TextStyle(
-                  fontSize: 20.sp,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: theme.textTheme.bodyLarge?.color,
                 ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 8.h),
               Text(
                 'Your booking has been confirmed.\nWe\'ll notify you once the service is completed.',
-                style: TextStyle(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontSize: 13.sp,
-                  color: theme.textTheme.bodyMedium?.color,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -235,7 +233,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     elevation: 0,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
@@ -244,9 +242,10 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   ),
                   child: Text(
                     'View Chat Dashboard',
-                    style: TextStyle(
+                    style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.sp,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -267,17 +266,15 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 13.sp,
-              color: theme.textTheme.bodyMedium?.color,
             ),
           ),
           Text(
             value,
-            style: TextStyle(
+            style: theme.textTheme.bodyLarge?.copyWith(
               fontSize: 13.sp,
               fontWeight: FontWeight.w600,
-              color: theme.textTheme.bodyLarge?.color,
             ),
           ),
         ],
@@ -289,6 +286,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+    final successColor = theme.brightness == Brightness.dark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+    final errorColor = theme.colorScheme.error;
     final provider = mockProviders
         .where((p) => p.id == widget.providerId)
         .firstOrNull;
@@ -306,23 +305,25 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
       margin: EdgeInsets.only(top: 12.h),
       decoration: BoxDecoration(
         color: bookingStatus == 'completed'
-            ? Colors.green.withValues(alpha: 0.06)
+            ? successColor.withValues(alpha: 0.06)
             : bookingStatus == 'cancelled'
-            ? Colors.red.withValues(alpha: 0.06)
+            ? errorColor.withValues(alpha: 0.06)
             : theme.cardTheme.color,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: bookingStatus == 'none'
               ? theme.dividerColor
               : bookingStatus == 'completed'
-              ? Colors.green
+              ? successColor
               : bookingStatus == 'cancelled'
-              ? Colors.red
-              : Colors.green,
+              ? errorColor
+              : successColor,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: theme.brightness == Brightness.dark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.05),
             blurRadius: 12.r,
             offset: Offset(0, 4.h),
           ),
@@ -352,7 +353,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                   child: Center(
                     child: Text(
                       provider.avatarEmoji,
-                      style: TextStyle(fontSize: 28.sp),
+                      style: theme.textTheme.headlineLarge?.copyWith(fontSize: 28.sp),
                     ),
                   ),
                 ),
@@ -370,7 +371,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                             child: Text(
                               provider.name,
                               maxLines: 1,
-                              style: TextStyle(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.sp,
                                 color: theme.textTheme.bodyLarge?.color,
@@ -383,19 +384,19 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                       // Rating + distance
                       Row(
                         children: [
-                          Icon(Icons.star, color: Colors.amber, size: 15.r),
+                          Icon(Icons.star, color: theme.brightness == Brightness.dark ? const Color(0xFFFBBF24) : const Color(0xFFD97706), size: 15.r),
                           SizedBox(width: 3.w),
                           Text(
                             '${provider.rating}',
-                            style: TextStyle(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               fontSize: 13.sp,
+                              color: theme.textTheme.bodyLarge?.color,
                             ),
                           ),
                           Text(
                             ' (${provider.reviewCount})',
-                            style: TextStyle(
-                              color: theme.textTheme.bodyMedium?.color,
+                            style: theme.textTheme.bodySmall?.copyWith(
                               fontSize: 12.sp,
                             ),
                           ),
@@ -403,14 +404,13 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                           Icon(
                             Icons.location_on_outlined,
                             size: 13.r,
-                            color: theme.textTheme.bodyMedium?.color,
+                            color: theme.textTheme.bodySmall?.color,
                           ),
                           SizedBox(width: 2.w),
                           Flexible(
                             child: Text(
                               '${provider.distanceKm} km away',
-                              style: TextStyle(
-                                color: theme.textTheme.bodyMedium?.color,
+                              style: theme.textTheme.bodySmall?.copyWith(
                                 fontSize: 12.sp,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -430,7 +430,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                                 vertical: 3.h,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.green.withValues(alpha: 0.12),
+                                color: successColor.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: Row(
@@ -439,14 +439,14 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                                   Icon(
                                     Icons.bolt,
                                     size: 11.r,
-                                    color: Colors.green.shade700,
+                                    color: successColor,
                                   ),
                                   SizedBox(width: 3.w),
                                   Text(
                                     tag,
-                                    style: TextStyle(
+                                    style: theme.textTheme.labelSmall?.copyWith(
                                       fontSize: 11.sp,
-                                      color: Colors.green.shade700,
+                                      color: successColor,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -511,7 +511,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                         icon: Icons.shield_outlined,
                         label: 'Reliability',
                         value: provider.reliabilityPercent,
-                        valueColor: Colors.green.shade700,
+                        valueColor: successColor,
                       ),
                     ),
                   ],
@@ -537,10 +537,9 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                 children: [
                   Text(
                     'Why this provider?',
-                    style: TextStyle(
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 13.sp,
-                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -552,12 +551,12 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                           Icon(
                             Icons.check_circle,
                             size: 15.r,
-                            color: Colors.green,
+                            color: successColor,
                           ),
                           SizedBox(width: 8.w),
                           Text(
                             reason,
-                            style: TextStyle(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontSize: 13.sp,
                               color: theme.textTheme.bodyLarge?.color,
                             ),
@@ -582,7 +581,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                           _bookProvider(provider.name, provider.basePrice),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         elevation: 0,
                         padding: EdgeInsets.symmetric(vertical: 14.h),
                         shape: RoundedRectangleBorder(
@@ -591,9 +590,10 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                       ),
                       child: Text(
                         'Book Now',
-                        style: TextStyle(
+                        style: theme.textTheme.labelLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 15.sp,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -603,8 +603,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     decoration: BoxDecoration(
                       color: bookingStatus == 'cancelled'
-                          ? Colors.red
-                          : Colors.green,
+                          ? errorColor
+                          : successColor,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     alignment: Alignment.center,
@@ -614,7 +614,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                           : bookingStatus == 'cancelled'
                           ? 'Booking Cancelled ❌'
                           : 'Booking Confirmed ✅',
-                      style: TextStyle(
+                      style: theme.textTheme.labelLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 15.sp,
@@ -643,9 +643,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
             SizedBox(width: 5.w),
             Text(
               label,
-              style: TextStyle(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 11.sp,
-                color: theme.textTheme.bodyMedium?.color,
               ),
             ),
           ],
@@ -653,7 +652,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
         SizedBox(height: 4.h),
         Text(
           value,
-          style: TextStyle(
+          style: theme.textTheme.bodyLarge?.copyWith(
             fontSize: 13.sp,
             fontWeight: FontWeight.w600,
             color: valueColor ?? theme.textTheme.bodyLarge?.color,

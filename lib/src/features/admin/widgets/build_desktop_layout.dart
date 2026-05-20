@@ -46,7 +46,7 @@ class BuildDesktopLayout extends StatelessWidget {
             children: [
               Text(
                 'Booking ID: #$bookingId',
-                style: TextStyle(
+                style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 16.sp,
                   fontFamily: 'monospace',
@@ -55,8 +55,7 @@ class BuildDesktopLayout extends StatelessWidget {
               SizedBox(height: 4.h),
               Text(
                 'Assigned to: $providerName',
-                style: TextStyle(
-                  color: theme.textTheme.bodyMedium?.color,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontSize: 14.sp,
                 ),
               ),
@@ -108,10 +107,10 @@ class BuildDesktopLayout extends StatelessWidget {
                               label: 'Complexity',
                               value: complexity,
                               valueColor: complexity == 'Complex'
-                                  ? Colors.red.shade600
+                                  ? theme.colorScheme.error
                                   : complexity == 'Intermediate'
-                                  ? Colors.blue.shade600
-                                  : Colors.green.shade600,
+                                  ? (theme.brightness == Brightness.dark ? Colors.blue.shade300 : Colors.blue.shade600)
+                                  : (theme.brightness == Brightness.dark ? Colors.green.shade300 : Colors.green.shade600),
                             ),
                           ),
                           SizedBox(width: 16.w),
@@ -147,9 +146,16 @@ class BuildDesktopLayout extends StatelessWidget {
               onPressed: () =>
                   firestoreService.updateBookingStatus(bookingId, 'completed'),
               icon: Icon(Icons.check, size: 16.r),
-              label: Text('Complete Job', style: TextStyle(fontSize: 13.sp)),
+              label: Text(
+                'Complete Job',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontSize: 13.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green.shade600,
+                backgroundColor: theme.brightness == Brightness.dark ? Colors.green.shade700 : Colors.green.shade600,
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(
@@ -162,9 +168,16 @@ class BuildDesktopLayout extends StatelessWidget {
               onPressed: () =>
                   firestoreService.updateBookingStatus(bookingId, 'cancelled'),
               icon: Icon(Icons.close, size: 16.r),
-              label: Text('Cancel Job', style: TextStyle(fontSize: 13.sp)),
+              label: Text(
+                'Cancel Job',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  fontSize: 13.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.shade500,
+                backgroundColor: theme.colorScheme.error,
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 shape: RoundedRectangleBorder(

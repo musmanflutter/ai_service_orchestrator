@@ -58,7 +58,7 @@ class BuildMobileLayout extends StatelessWidget {
                 children: [
                   Text(
                     'Booking ID: #$bookingId',
-                    style: TextStyle(
+                    style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 14.sp,
                       fontFamily: 'monospace',
@@ -68,10 +68,7 @@ class BuildMobileLayout extends StatelessWidget {
                   SizedBox(height: 2.h),
                   Text(
                     'Assigned to: $providerName',
-                    style: TextStyle(
-                      color: theme.textTheme.bodyMedium?.color?.withValues(
-                        alpha: 0.8,
-                      ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontSize: 13.sp,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -121,10 +118,10 @@ class BuildMobileLayout extends StatelessWidget {
                 label: 'Complexity',
                 value: complexity,
                 valueColor: complexity == 'Complex'
-                    ? Colors.red.shade600
+                    ? theme.colorScheme.error
                     : complexity == 'Intermediate'
-                    ? Colors.blue.shade600
-                    : Colors.green.shade600,
+                    ? (theme.brightness == Brightness.dark ? Colors.blue.shade300 : Colors.blue.shade600)
+                    : (theme.brightness == Brightness.dark ? Colors.green.shade300 : Colors.green.shade600),
               ),
               if (priceQuote != null && priceQuote!.isNotEmpty) ...[
                 SizedBox(height: 8.h),
@@ -153,16 +150,17 @@ class BuildMobileLayout extends StatelessWidget {
                 icon: Icon(Icons.check_circle_outline_rounded, size: 16.r),
                 label: const Text('Complete'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade600,
+                  backgroundColor: theme.brightness == Brightness.dark ? Colors.green.shade700 : Colors.green.shade600,
                   foregroundColor: Colors.white,
                   elevation: 0,
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  textStyle: TextStyle(
+                  textStyle: theme.textTheme.labelMedium?.copyWith(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -177,16 +175,17 @@ class BuildMobileLayout extends StatelessWidget {
                 icon: Icon(Icons.cancel_outlined, size: 16.r),
                 label: const Text('Cancel'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade500,
+                  backgroundColor: theme.colorScheme.error,
                   foregroundColor: Colors.white,
                   elevation: 0,
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  textStyle: TextStyle(
+                  textStyle: theme.textTheme.labelMedium?.copyWith(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),

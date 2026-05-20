@@ -19,9 +19,12 @@ class AdminDashboardPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Admin Dashboard',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: Colors.white,
@@ -33,9 +36,9 @@ class AdminDashboardPage extends ConsumerWidget {
             icon: const Icon(Icons.forum_rounded, color: Colors.white),
             label: isMobile
                 ? const SizedBox.shrink()
-                : const Text(
+                : Text(
                     'User Chat',
-                    style: TextStyle(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -54,7 +57,7 @@ class AdminDashboardPage extends ConsumerWidget {
             return Center(
               child: Text(
                 'Error: ${snapshot.error}',
-                style: TextStyle(fontSize: 14.sp),
+                style: theme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp),
               ),
             );
           }
@@ -90,7 +93,7 @@ class AdminDashboardPage extends ConsumerWidget {
                   SizedBox(height: 16.h),
                   Text(
                     'No active pending bookings.',
-                    style: TextStyle(
+                    style: theme.textTheme.bodyLarge?.copyWith(
                       fontSize: 16.sp,
                       color: theme.textTheme.bodyMedium?.color?.withValues(
                         alpha: 0.5,
@@ -125,17 +128,23 @@ class AdminDashboardPage extends ConsumerWidget {
               final priceQuote = booking['priceQuote'] as String?;
               final priceBreakdown = booking['priceBreakdown'] as String?;
 
+              final accentColor = theme.brightness == Brightness.dark
+                  ? const Color(0xFFFBBF24)
+                  : const Color(0xFFF59E0B);
+
               return Container(
                 margin: EdgeInsets.only(bottom: 16.h),
                 decoration: BoxDecoration(
                   color: theme.cardTheme.color,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border(
-                    left: BorderSide(color: Colors.orange.shade400, width: 4),
+                    left: BorderSide(color: accentColor, width: 4),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
+                      color: theme.brightness == Brightness.dark
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.black.withValues(alpha: 0.04),
                       blurRadius: 10.r,
                       offset: Offset(0, 3.h),
                     ),

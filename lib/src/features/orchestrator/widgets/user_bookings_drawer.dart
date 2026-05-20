@@ -86,7 +86,7 @@ class UserBookingsDrawer extends ConsumerWidget {
                           SizedBox(height: 12.h),
                           Text(
                             'No bookings yet',
-                            style: TextStyle(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontSize: 14.sp,
                               color: theme.textTheme.bodyMedium?.color
                                   ?.withValues(alpha: 0.5),
@@ -145,7 +145,7 @@ class _BookingCard extends StatelessWidget {
     final emoji = provider?.avatarEmoji ?? '👨‍🔧';
 
     // Status config
-    final _StatusConfig cfg = _statusConfig(status);
+    final _StatusConfig cfg = _statusConfig(status, theme);
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -180,7 +180,7 @@ class _BookingCard extends StatelessWidget {
                     border: Border.all(color: theme.dividerColor, width: 1.5),
                   ),
                   child: Center(
-                    child: Text(emoji, style: TextStyle(fontSize: 24.sp)),
+                    child: Text(emoji, style: theme.textTheme.headlineMedium?.copyWith(fontSize: 24.sp)),
                   ),
                 ),
                 SizedBox(width: 12.w),
@@ -196,10 +196,9 @@ class _BookingCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               providerName,
-                              style: TextStyle(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.bold,
-                                color: theme.textTheme.bodyLarge?.color,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -214,7 +213,7 @@ class _BookingCard extends StatelessWidget {
                             SizedBox(width: 2.w),
                             Text(
                               rating.toString(),
-                              style: TextStyle(
+                              style: theme.textTheme.bodySmall?.copyWith(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w600,
                                 color: theme.textTheme.bodyLarge?.color,
@@ -236,7 +235,7 @@ class _BookingCard extends StatelessWidget {
                           Flexible(
                             child: Text(
                               timeDisplay,
-                              style: TextStyle(
+                              style: theme.textTheme.bodySmall?.copyWith(
                                 fontSize: 12.sp,
                                 color: theme.textTheme.bodyMedium?.color,
                               ),
@@ -274,7 +273,7 @@ class _BookingCard extends StatelessWidget {
                     SizedBox(width: 5.w),
                     Text(
                       cfg.label,
-                      style: TextStyle(
+                      style: theme.textTheme.bodySmall?.copyWith(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: cfg.color,
@@ -287,10 +286,9 @@ class _BookingCard extends StatelessWidget {
                 if (price.isNotEmpty)
                   Text(
                     price,
-                    style: TextStyle(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
-                      color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
               ],
@@ -301,7 +299,7 @@ class _BookingCard extends StatelessWidget {
             // Booking ID (small, below the status row)
             Text(
               '#${bookingId.toLowerCase()}',
-              style: TextStyle(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontSize: 10.sp,
                 color: theme.textTheme.bodyMedium?.color?.withValues(
                   alpha: 0.45,
@@ -323,16 +321,17 @@ class _StatusConfig {
   const _StatusConfig(this.label, this.color);
 }
 
-_StatusConfig _statusConfig(String status) {
+_StatusConfig _statusConfig(String status, ThemeData theme) {
+  final isDark = theme.brightness == Brightness.dark;
   switch (status) {
     case 'completed':
-      return const _StatusConfig('Completed', Colors.green);
+      return _StatusConfig('Completed', isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A));
     case 'cancelled':
-      return _StatusConfig('Cancelled', Colors.red.shade500);
+      return _StatusConfig('Cancelled', theme.colorScheme.error);
     case 'confirmed':
-      return _StatusConfig('Confirmed', Colors.orange.shade600);
+      return _StatusConfig('Confirmed', isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706));
     default:
-      return _StatusConfig('In Progress', Colors.blue.shade500);
+      return _StatusConfig('In Progress', theme.colorScheme.primary);
   }
 }
 
