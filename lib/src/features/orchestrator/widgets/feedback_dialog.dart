@@ -16,10 +16,14 @@ Future<void> showFeedbackDialog(
       final theme = Theme.of(context);
       final isDark = theme.brightness == Brightness.dark;
       final green = isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
-      final greenBg = isDark ? const Color(0xFF143A24) : const Color(0xFFE8F5E9);
-      final greenBorder = isDark ? const Color(0xFF1E5235) : const Color(0xFFA5D6A7);
-      final starActive = isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706);
-      final starInactive = isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB);
+      final greenBg = isDark
+          ? const Color(0xFF143A24)
+          : const Color(0xFFE8F5E9);
+      final greenBorder = isDark
+          ? const Color(0xFF1E5235)
+          : const Color(0xFFA5D6A7);
+      final starActive = Colors.green.shade500;
+      final starInactive = Colors.grey.shade300;
 
       return StatefulBuilder(
         builder: (context, setState) {
@@ -56,17 +60,14 @@ Future<void> showFeedbackDialog(
                     decoration: BoxDecoration(
                       color: greenBg,
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: greenBorder,
-                        width: 2,
-                      ),
+                      border: Border.all(color: greenBorder, width: 2),
                     ),
                     child: Icon(Icons.check_rounded, color: green, size: 28.r),
                   ),
                   SizedBox(height: 8.h),
 
                   // ── Title ──────────────────────────────────────────
-                   Text(
+                  Text(
                     'Job Completed!',
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: green,
@@ -76,9 +77,7 @@ Future<void> showFeedbackDialog(
                   SizedBox(height: 6.h),
                   Text(
                     'How was your experience?',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: green,
-                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(color: green),
                   ),
                   SizedBox(height: 20.h),
 
@@ -95,9 +94,7 @@ Future<void> showFeedbackDialog(
                             filled
                                 ? Icons.star_rounded
                                 : Icons.star_outline_rounded,
-                            color: filled
-                                ? starActive
-                                : starInactive,
+                            color: filled ? starActive : starInactive,
                             size: 40.r,
                           ),
                         ),
@@ -215,7 +212,9 @@ Future<void> showBadRatingDialog(
       final isDark = theme.brightness == Brightness.dark;
       final red = theme.colorScheme.error;
       final redBg = isDark ? const Color(0xFF3B1313) : const Color(0xFFFFEBEE);
-      final redBorder = isDark ? const Color(0xFF5C1D1D) : const Color(0xFFFFCDD2);
+      final redBorder = isDark
+          ? const Color(0xFF5C1D1D)
+          : const Color(0xFFFFCDD2);
 
       return StatefulBuilder(
         builder: (context, setState) {
@@ -269,7 +268,7 @@ Future<void> showBadRatingDialog(
                   SizedBox(height: 6.h),
 
                   // ── Title ────────────────────────────────────────
-                   Text(
+                  Text(
                     'We\'re Sorry to Hear That 😔',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -319,7 +318,7 @@ Future<void> showBadRatingDialog(
                           ),
                           child: Text(
                             issue,
-                             style: theme.textTheme.bodySmall?.copyWith(
+                            style: theme.textTheme.bodySmall?.copyWith(
                               fontSize: 13.sp,
                               fontWeight: isSelected
                                   ? FontWeight.w600
@@ -340,7 +339,7 @@ Future<void> showBadRatingDialog(
                     TextField(
                       controller: otherController,
                       maxLines: 2,
-                       style: theme.textTheme.bodyMedium?.copyWith(
+                      style: theme.textTheme.bodyMedium?.copyWith(
                         fontSize: 13.sp,
                       ),
                       decoration: InputDecoration(
