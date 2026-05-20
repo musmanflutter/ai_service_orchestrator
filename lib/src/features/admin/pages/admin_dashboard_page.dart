@@ -1,3 +1,4 @@
+import 'package:ai_service_orchestrator/src/common_widgets.dart/custom_scaffold.dart';
 import 'package:ai_service_orchestrator/src/features/admin/widgets/build_desktop_layout.dart';
 import 'package:ai_service_orchestrator/src/features/admin/widgets/build_mobile_layout.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class AdminDashboardPage extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < 720;
 
-    return Scaffold(
+    return CustomScaffold(
       appBar: AppBar(
         title: Text(
           'Admin Dashboard',

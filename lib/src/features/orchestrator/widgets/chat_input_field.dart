@@ -1,4 +1,5 @@
 import 'package:ai_service_orchestrator/src/features/orchestrator/controller/chat_provider.dart';
+import 'package:ai_service_orchestrator/src/features/orchestrator/controller/ai_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,17 +54,24 @@ class _ChatInputFieldState extends State<ChatInputField> {
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) {
+                    final isThinking = ref.watch(isAgentThinkingProvider);
                     return TextFormField(
                       controller: _controller,
+                      enabled: !isThinking,
                       onChanged: (val) {
                         ref.read(chatInputProvider.notifier).state = val;
                       },
-                      style: theme.textTheme.bodyMedium,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isThinking
+                            ? theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5)
+                            : theme.textTheme.bodyMedium?.color,
+                      ),
                       decoration: InputDecoration(
-                        hintText: "Type your message...",
+                        hintText: isThinking ? "Orchestrator is thinking..." : "Type your message...",
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 4.w,
                           vertical: 10.h,
@@ -81,12 +89,45 @@ class _ChatInputFieldState extends State<ChatInputField> {
 
               SizedBox(width: 8.w),
 
-              // ── Send Button ────────────────────────────────────
+              // ── Send / Stop Button ──────────────────────────────
               Consumer(
                 builder: (context, ref, child) {
                   final input = ref.watch(chatInputProvider);
                   final isThinking = ref.watch(isAgentThinkingProvider);
-                  final canSend = input.trim().isNotEmpty && !isThinking;
+
+                  if (isThinking) {
+                    return GestureDetector(
+                      onTap: () {
+                        ref.read(aiControllerProvider.notifier).stopGenerating();
+                      },
+                      child: Container(
+                        width: 40.r,
+                        height: 40.r,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.error,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.error.withValues(
+                                alpha: 0.25,
+                              ),
+                              blurRadius: 8.r,
+                              offset: Offset(0, 3.h),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.stop_rounded,
+                            color: theme.colorScheme.onError,
+                            size: 22.r,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  final canSend = input.trim().isNotEmpty;
 
                   return GestureDetector(
                     onTap: canSend
