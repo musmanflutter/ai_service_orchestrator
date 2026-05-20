@@ -24,13 +24,55 @@ class UserBookingsDrawer extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ──────────────────────────────────────────────
+            // ── Brand Logo Header ───────────────────────────────────
             Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 20.h, 8.w, 12.h),
+              padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 8.h),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('My Bookings', style: theme.textTheme.titleLarge),
+                  Container(
+                    width: 44.r,
+                    height: 44.r,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.2,
+                          ),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(22.r),
+                      child: Image.asset(
+                        'assets/images/app_logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Orchestra AI',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Booking Manager',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.textTheme.bodyMedium?.color?.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
                   IconButton(
                     icon: Icon(
                       isDark ? Icons.light_mode : Icons.dark_mode,
@@ -108,118 +150,155 @@ class UserBookingsDrawer extends ConsumerWidget {
                       final doc =
                           bookings[index].data() as Map<String, dynamic>;
                       final bookingId = doc['id'] as String? ?? '';
-                      
+
                       return Dismissible(
                         key: Key(bookingId),
                         direction: DismissDirection.startToEnd,
                         confirmDismiss: (direction) async {
                           return await showDialog<bool>(
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: theme.scaffoldBackgroundColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.r),
-                                  side: BorderSide(
-                                    color: theme.colorScheme.outline,
-                                    width: 1,
-                                  ),
-                                ),
-                                insetPadding: EdgeInsets.symmetric(horizontal: 32.w),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // Header Row
-                                      Row(
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    backgroundColor:
+                                        theme.scaffoldBackgroundColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      side: BorderSide(
+                                        color: theme.colorScheme.outline,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    insetPadding: EdgeInsets.symmetric(
+                                      horizontal: 32.w,
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 24.w,
+                                        vertical: 24.h,
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8.r),
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.error.withValues(alpha: 0.1),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.delete_forever_rounded,
-                                              color: theme.colorScheme.error,
-                                              size: 24.r,
-                                            ),
-                                          ),
-                                          SizedBox(width: 12.w),
-                                          Expanded(
-                                            child: Text(
-                                              'Delete Booking',
-                                              style: theme.textTheme.titleLarge?.copyWith(
-                                                fontWeight: FontWeight.bold,
+                                          // Header Row
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(8.r),
+                                                decoration: BoxDecoration(
+                                                  color: theme.colorScheme.error
+                                                      .withValues(alpha: 0.1),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.delete_forever_rounded,
+                                                  color:
+                                                      theme.colorScheme.error,
+                                                  size: 24.r,
+                                                ),
                                               ),
-                                            ),
+                                              SizedBox(width: 12.w),
+                                              Expanded(
+                                                child: Text(
+                                                  'Delete Booking',
+                                                  style: theme
+                                                      .textTheme
+                                                      .titleLarge
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 16.h),
+                                          // Content Text
+                                          Text(
+                                            'Are you sure you want to delete this booking reference?',
+                                            style: theme.textTheme.bodyMedium,
+                                          ),
+                                          SizedBox(height: 24.h),
+                                          // Action Buttons
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              // Cancel Button
+                                              TextButton(
+                                                onPressed: () => Navigator.of(
+                                                  context,
+                                                ).pop(false),
+                                                style: TextButton.styleFrom(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.w,
+                                                    vertical: 12.h,
+                                                  ),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: theme
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 8.w),
+                                              // Confirm Button
+                                              ElevatedButton(
+                                                onPressed: () => Navigator.of(
+                                                  context,
+                                                ).pop(true),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      theme.colorScheme.error,
+                                                  foregroundColor:
+                                                      theme.colorScheme.onError,
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 20.w,
+                                                    vertical: 12.h,
+                                                  ),
+                                                  elevation: 0,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  'Delete',
+                                                  style: theme
+                                                      .textTheme
+                                                      .titleSmall
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: theme
+                                                            .colorScheme
+                                                            .onError,
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 16.h),
-                                      // Content Text
-                                      Text(
-                                        'Are you sure you want to delete this booking reference?',
-                                        style: theme.textTheme.bodyMedium,
-                                      ),
-                                      SizedBox(height: 24.h),
-                                      // Action Buttons
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          // Cancel Button
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(false),
-                                            style: TextButton.styleFrom(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 16.w,
-                                                vertical: 12.h,
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10.r),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              'Cancel',
-                                              style: theme.textTheme.bodyMedium?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(width: 8.w),
-                                          // Confirm Button
-                                          ElevatedButton(
-                                            onPressed: () => Navigator.of(context).pop(true),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: theme.colorScheme.error,
-                                              foregroundColor: theme.colorScheme.onError,
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 20.w,
-                                                vertical: 12.h,
-                                              ),
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10.r),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              'Delete',
-                                              style: theme.textTheme.titleSmall?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: theme.colorScheme.onError,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ) ?? false;
+                                    ),
+                                  );
+                                },
+                              ) ??
+                              false;
                         },
                         onDismissed: (direction) {
                           firestoreService.deleteBooking(bookingId);
@@ -325,7 +404,12 @@ class _BookingCard extends StatelessWidget {
                     border: Border.all(color: theme.dividerColor, width: 1.5),
                   ),
                   child: Center(
-                    child: Text(emoji, style: theme.textTheme.headlineMedium?.copyWith(fontSize: 24.sp)),
+                    child: Text(
+                      emoji,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontSize: 24.sp,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(width: 12.w),
@@ -470,11 +554,17 @@ _StatusConfig _statusConfig(String status, ThemeData theme) {
   final isDark = theme.brightness == Brightness.dark;
   switch (status) {
     case 'completed':
-      return _StatusConfig('Completed', isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A));
+      return _StatusConfig(
+        'Completed',
+        isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A),
+      );
     case 'cancelled':
       return _StatusConfig('Cancelled', theme.colorScheme.error);
     case 'confirmed':
-      return _StatusConfig('Confirmed', isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706));
+      return _StatusConfig(
+        'Confirmed',
+        isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706),
+      );
     default:
       return _StatusConfig('In Progress', theme.colorScheme.primary);
   }
