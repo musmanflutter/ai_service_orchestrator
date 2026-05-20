@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/repository/firestore_service.dart';
+import 'package:ai_service_orchestrator/src/common_widgets.dart/sharedpreference.dart';
 import 'package:toastification/toastification.dart';
 
 class BookingReminderListener extends ConsumerStatefulWidget {
@@ -39,7 +40,8 @@ class _BookingReminderListenerState
       debugPrint('[Reminder] Polling Firestore...');
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
-        final snapshot = await firestoreService.getPendingBookingsFuture();
+        final userId = Preference.getUserId();
+        final snapshot = await firestoreService.getPendingBookingsFuture(userId);
         final now = DateTime.now()
             .toUtc(); // Use UTC to match AI-generated timestamps
 

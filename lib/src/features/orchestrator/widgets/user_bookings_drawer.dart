@@ -16,6 +16,7 @@ class UserBookingsDrawer extends ConsumerWidget {
     final theme = Theme.of(context);
     final currentThemeMode = ref.watch(themeModeProvider);
     final isDark = currentThemeMode == ThemeMode.dark;
+    final userId = Preference.getUserId();
 
     return Drawer(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -50,7 +51,7 @@ class UserBookingsDrawer extends ConsumerWidget {
             // ── Bookings list ────────────────────────────────────────
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: firestoreService.getAllBookings(),
+                stream: firestoreService.getAllBookings(userId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

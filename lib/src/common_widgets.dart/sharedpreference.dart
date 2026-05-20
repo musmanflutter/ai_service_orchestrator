@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Preference {
@@ -6,6 +7,19 @@ class Preference {
   //INITIALIZE
   static Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
+  }
+
+  //GET OR GENERATE USER ID
+  static String getUserId() {
+    String? userId = getString('device_user_id');
+    if (userId == null) {
+      final random = Random();
+      final part1 = DateTime.now().millisecondsSinceEpoch.toString();
+      final part2 = random.nextInt(999999).toString().padLeft(6, '0');
+      userId = 'usr_${part1}_$part2';
+      setString('device_user_id', userId);
+    }
+    return userId;
   }
 
   //SETTER

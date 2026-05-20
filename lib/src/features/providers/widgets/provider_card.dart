@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ai_service_orchestrator/src/features/providers/data/mock_providers.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/widgets/feedback_dialog.dart';
 import 'package:ai_service_orchestrator/src/features/orchestrator/repository/firestore_service.dart';
+import 'package:ai_service_orchestrator/src/common_widgets.dart/sharedpreference.dart';
 
 class ProviderCard extends ConsumerStatefulWidget {
   final String providerId;
@@ -122,6 +123,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
       };
     });
 
+    final userId = Preference.getUserId();
+
     ref
         .read(firestoreServiceProvider)
         .createBooking(
@@ -132,6 +135,7 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
           widget.bookingContext?['location'] ?? 'Unknown Location',
           widget.bookingContext?['time'] ?? 'Unknown Time',
           widget.bookingContext?['scheduledTimestamp'],
+          userId,
         );
 
     _subscribeToBooking(bookingId);

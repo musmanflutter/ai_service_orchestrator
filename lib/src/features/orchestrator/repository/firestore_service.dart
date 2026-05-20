@@ -17,6 +17,7 @@ class FirestoreService {
     String location,
     String time,
     String? scheduledTimestamp,
+    String userId,
   ) async {
     await _db.collection('bookings').doc(bookingId).set({
       'id': bookingId,
@@ -27,6 +28,7 @@ class FirestoreService {
       'time': time,
       'scheduledTimestamp': scheduledTimestamp,
       'status': 'pending',
+      'userId': userId,
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
@@ -41,14 +43,17 @@ class FirestoreService {
         .snapshots();
   }
 
-  Future<QuerySnapshot> getPendingBookingsFuture() {
+  Future<QuerySnapshot> getPendingBookingsFuture(String userId) {
     return _db.collection('bookings')
         .where('status', isEqualTo: 'pending')
+        .where('userId', isEqualTo: userId)
         .get();
   }
 
-  Stream<QuerySnapshot> getAllBookings() {
-    return _db.collection('bookings').snapshots();
+  Stream<QuerySnapshot> getAllBookings(String userId) {
+    return _db.collection('bookings')
+        .where('userId', isEqualTo: userId)
+        .snapshots();
   }
 
   Future<void> updateBookingStatus(String bookingId, String status) async {
