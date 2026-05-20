@@ -1,5 +1,6 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'api_key.dart';
 
 part 'ai_repository.g.dart';
 
@@ -23,8 +24,8 @@ class AIRepository {
   }
 }
 
-// NOTE: We will supply the real API key later. For now, it's just a placeholder string.
 @Riverpod(keepAlive: true)
 AIRepository aiRepository(Ref ref) {
-  return AIRepository('AIzaSyDlxxIHGvxoqAHMdZUiNB0X_SxXCuaESh0');
+  return AIRepository(geminiApiKey);
 }
+

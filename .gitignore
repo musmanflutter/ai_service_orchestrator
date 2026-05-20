@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Secure Local API Credentials
+/lib/src/features/orchestrator/repository/api_key.dart
+
