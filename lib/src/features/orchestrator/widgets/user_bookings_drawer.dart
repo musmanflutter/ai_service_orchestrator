@@ -106,7 +106,151 @@ class UserBookingsDrawer extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final doc =
                           bookings[index].data() as Map<String, dynamic>;
-                      return _BookingCard(doc: doc, theme: theme);
+                      final bookingId = doc['id'] as String? ?? '';
+                      
+                      return Dismissible(
+                        key: Key(bookingId),
+                        direction: DismissDirection.startToEnd,
+                        confirmDismiss: (direction) async {
+                          return await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                backgroundColor: theme.scaffoldBackgroundColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  side: BorderSide(
+                                    color: theme.colorScheme.outline,
+                                    width: 1,
+                                  ),
+                                ),
+                                insetPadding: EdgeInsets.symmetric(horizontal: 32.w),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Header Row
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(8.r),
+                                            decoration: BoxDecoration(
+                                              color: theme.colorScheme.error.withValues(alpha: 0.1),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.delete_forever_rounded,
+                                              color: theme.colorScheme.error,
+                                              size: 24.r,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12.w),
+                                          Expanded(
+                                            child: Text(
+                                              'Delete Booking',
+                                              style: theme.textTheme.titleLarge?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 16.h),
+                                      // Content Text
+                                      Text(
+                                        'Are you sure you want to delete this booking reference?',
+                                        style: theme.textTheme.bodyMedium,
+                                      ),
+                                      SizedBox(height: 24.h),
+                                      // Action Buttons
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          // Cancel Button
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(false),
+                                            style: TextButton.styleFrom(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 16.w,
+                                                vertical: 12.h,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10.r),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Cancel',
+                                              style: theme.textTheme.bodyMedium?.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          // Confirm Button
+                                          ElevatedButton(
+                                            onPressed: () => Navigator.of(context).pop(true),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: theme.colorScheme.error,
+                                              foregroundColor: theme.colorScheme.onError,
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 20.w,
+                                                vertical: 12.h,
+                                              ),
+                                              elevation: 0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(10.r),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Delete',
+                                              style: theme.textTheme.titleSmall?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: theme.colorScheme.onError,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ) ?? false;
+                        },
+                        onDismissed: (direction) {
+                          firestoreService.deleteBooking(bookingId);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Booking deleted successfully',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onError,
+                                ),
+                              ),
+                              backgroundColor: theme.colorScheme.error,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                        background: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          margin: EdgeInsets.only(bottom: 12.h),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error,
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: Icon(
+                            Icons.delete_forever_rounded,
+                            color: theme.colorScheme.onError,
+                            size: 24.r,
+                          ),
+                        ),
+                        child: _BookingCard(doc: doc, theme: theme),
+                      );
                     },
                   );
                 },

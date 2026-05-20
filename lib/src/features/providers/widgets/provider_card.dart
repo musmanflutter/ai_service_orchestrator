@@ -623,8 +623,8 @@ class _ProviderCardState extends ConsumerState<ProviderCard> {
                       bookingStatus == 'completed'
                           ? 'Job Completed ✅'
                           : bookingStatus == 'cancelled'
-                          ? 'Booking Cancelled ❌'
-                          : 'Booking Confirmed ✅',
+                          ? 'Booking Cancelled'
+                          : 'Booking Confirmed',
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

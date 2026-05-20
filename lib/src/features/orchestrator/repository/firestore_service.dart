@@ -54,4 +54,8 @@ class FirestoreService {
   Future<void> updateBookingStatus(String bookingId, String status) async {
     await _db.collection('bookings').doc(bookingId).update({'status': status});
   }
+
+  Future<void> deleteBooking(String bookingId) async {
+    await _db.collection('bookings').doc(bookingId).delete();
+  }
 }

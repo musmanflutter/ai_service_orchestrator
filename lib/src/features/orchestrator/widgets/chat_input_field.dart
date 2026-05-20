@@ -63,11 +63,15 @@ class _ChatInputFieldState extends State<ChatInputField> {
                       },
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: isThinking
-                            ? theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5)
+                            ? theme.textTheme.bodyMedium?.color?.withValues(
+                                alpha: 0.5,
+                              )
                             : theme.textTheme.bodyMedium?.color,
                       ),
                       decoration: InputDecoration(
-                        hintText: isThinking ? "Orchestrator is thinking..." : "Type your message...",
+                        hintText: isThinking
+                            ? "Orchestrator is thinking..."
+                            : "Type your message...",
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
@@ -98,17 +102,19 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   if (isThinking) {
                     return GestureDetector(
                       onTap: () {
-                        ref.read(aiControllerProvider.notifier).stopGenerating();
+                        ref
+                            .read(aiControllerProvider.notifier)
+                            .stopGenerating();
                       },
                       child: Container(
                         width: 40.r,
                         height: 40.r,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.error,
+                          color: theme.colorScheme.primary,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: theme.colorScheme.error.withValues(
+                              color: theme.colorScheme.primary.withValues(
                                 alpha: 0.25,
                               ),
                               blurRadius: 8.r,
@@ -119,7 +125,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                         child: Center(
                           child: Icon(
                             Icons.stop_rounded,
-                            color: theme.colorScheme.onError,
+                            color: theme.colorScheme.onPrimary,
                             size: 22.r,
                           ),
                         ),

@@ -66,24 +66,6 @@ void showReasoningBottomSheet(BuildContext context, String reasoningText) {
                           color: theme.textTheme.bodyLarge?.color,
                         ),
                       ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: () => Navigator.pop(context),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: Container(
-                          padding: EdgeInsets.all(6.r),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.surface,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: theme.dividerColor),
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            size: 16.r,
-                            color: theme.textTheme.bodyMedium?.color,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -224,7 +206,9 @@ class _TimelineStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
-    final successColor = theme.brightness == Brightness.dark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+    final successColor = theme.brightness == Brightness.dark
+        ? const Color(0xFF4ADE80)
+        : const Color(0xFF16A34A);
     final dotColor = isFinal ? primary : successColor;
 
     return IntrinsicHeight(
