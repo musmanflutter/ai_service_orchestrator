@@ -1,4 +1,6 @@
-<img src="assets/images/orchestra-01.png" alt="Orchestra AI — App Preview" width="700"/>
+<p align="center">
+  <img src="assets/images/orchestra-01.png" alt="Orchestra AI — App Preview" width="999"/>
+</p>
 
 # 🚀 Orchestra AI: Service Orchestrator for the Informal Economy
 ### Powered by Google Antigravity & Agentic AI
