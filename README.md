@@ -1,3 +1,5 @@
+<img src="assets/images/thumbnail.jpg" alt="Drawer Menu" width="999"/>
+
 # 🚀 Orchestra AI: Service Orchestrator for the Informal Economy
 ### Powered by Google Antigravity & Agentic AI
 
